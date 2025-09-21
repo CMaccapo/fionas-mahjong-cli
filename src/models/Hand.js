@@ -3,6 +3,13 @@ export default class Hand {
     this.tiles = [];
   }
 
+  get playableTiles() {
+    return this.tiles.filter(tile => tile.type === "playable");
+  }
+  get pointsTiles() {
+    return this.tiles.filter(tile => tile.type === "points");
+  }
+
   addTile(tile) {
     this.tiles.push(tile);
   }
@@ -13,6 +20,7 @@ export default class Hand {
   }
 
   toString() {
-    return this.tiles.map(t => t.toString()).join(" ");
+    return `|${this.playableTiles.map(t => t.toString()).join("|")}|
+    Points: |${this.pointsTiles.map(t => t.toString()).join("|")}|`;
   }
 }

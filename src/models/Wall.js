@@ -10,7 +10,7 @@ export default class Wall {
     const tiles = [];
 
     // --- Playable suits (108) ---
-    const suits = ["circles", "sticks", "characters"];
+    const suits = ["●", "┇", "C"];
     for (const suit of suits) {
       for (let value = 1; value <= 9; value++) {
         for (let i = 0; i < 4; i++) {
@@ -21,7 +21,6 @@ export default class Wall {
 
     // --- Winds (16) ---
     const winds = ["winds"];
-    // value 1=East, 2=South, 3=West, 4=North
     for (let value = 1; value <= 4; value++) {
       for (let i = 0; i < 4; i++) {
         tiles.push(new Tile("winds", value, "points"));
@@ -30,7 +29,6 @@ export default class Wall {
 
     // --- Dragons (12) ---
     const dragons = ["dragons"];
-    // value 1=Red, 2=Green, 3=White/Black
     for (let value = 1; value <= 3; value++) {
       for (let i = 0; i < 4; i++) {
         tiles.push(new Tile("dragons", value, "points"));

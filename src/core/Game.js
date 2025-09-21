@@ -3,16 +3,25 @@ import Player from "../models/Player.js";
 import Boneyard from "../models/Boneyard.js";
 
 export default class Game {
-  constructor(ui) {
+  constructor(players, ui) {
     this.ui = ui;
     this.tiles = [];
     this.wall = new Wall();
     this.boneyard = new Boneyard();
-    this.players = [];
+    this.players = players;
   }
 
   setup() {
-    // Shuffle wall, assign dealer, deal tiles
+    for (const player of this.players){
+      while(player.hand.tiles.length < 16){
+        for (let i = 0; i<4; i++){
+          player.hand.addTile(this.wall.drawFromHead());
+        }
+      }
+    }
+    this.players[0].hand.addTile(this.wall.drawFromHead());
+
+    this.players.forEach(p => console.log(p.hand.toString()));
   }
 
   exchangePointsPhase() {
