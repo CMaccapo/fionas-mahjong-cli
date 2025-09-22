@@ -12,16 +12,53 @@ export default class Game {
   }
 
   setup() {
-
+    this.chooseDealer();
+    console.log()
     for (const player of this.players){
       this.drawInitialHands(player);
       this.replaceInitialPoints(player);
     }
 
-
-
     this.players.forEach(p => console.log(p.hand.toString()));
   }
+
+  chooseDealer(maxRerolls = 3) {
+    let contenders = this.players;
+    let attempt = 0;
+
+    while (contenders.length > 1 && attempt < maxRerolls) {
+      attempt++;
+      let max = 0;
+      let rolls = new Map();
+
+      for (const player of contenders) {
+        const dice = (Math.floor(Math.random() * 6) + 1) +
+                    (Math.floor(Math.random() * 6) + 1);
+        rolls.set(player, dice);
+        console.log(`${player.name} rolls ${dice}`);
+
+        if (dice > max) {
+          max = dice;
+        }
+      }
+
+      contenders = contenders.filter(p => rolls.get(p) === max);
+
+      if (contenders.length > 1 && attempt < maxRerolls) {
+        console.log(
+          `Tie between ${contenders.map(p => p.name).join(", ")} — rolling again!`
+        );
+      }
+    }
+
+    //Fallback
+    const dealer = contenders[0];
+    dealer.makeDealer();
+    console.log(
+      `${dealer.name} is the dealer! (decided after ${attempt} attempt${attempt > 1 ? "s" : ""})`
+    );
+  }
+    
 
   drawInitialHands(player){
       while(player.hand.tiles.length < 16){
@@ -33,6 +70,7 @@ export default class Game {
       player.hand.addTile(this.wall.drawFromHead());
     }
   }
+
   replaceInitialPoints(player) {
     player.pendingReplacements = player.hand.pointsTiles.length;
     let handLen = 16;

@@ -10,6 +10,10 @@ export default class Player {
     this.pendingReplacements = 0;
   }
 
+  makeDealer() {
+    this.dealer = true;
+  }
+
   isDealer() {
     return this.dealer;
   }
