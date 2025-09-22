@@ -6,6 +6,17 @@ export default class Hand {
   get playableTiles() {
     return this.tiles.filter(tile => tile.type === "playable");
   }
+
+  sortTiles(tiles) {
+    const suitOrder = ["C", "●", "┇"];
+    return [...tiles].sort((a, b) => {
+      if (a.suit !== b.suit) {
+        return suitOrder.indexOf(a.suit) - suitOrder.indexOf(b.suit);
+      }
+      return a.value - b.value;
+    });
+  }
+
   get pointsTiles() {
     return this.tiles.filter(tile => tile.type === "points");
   }
@@ -20,7 +31,8 @@ export default class Hand {
   }
 
   toString() {
-    return `|${this.playableTiles.map(t => t.toString()).join("|")}|
-    Points: |${this.pointsTiles.map(t => t.toString()).join("|")}|`;
+    const sortedPlayable = this.sortTiles(this.playableTiles);
+    return `     |${sortedPlayable.map(t => t.toString()).join("||")}|
+       Points: |${this.pointsTiles.map(t => t.toString()).join("||")}|`;
   }
 }
