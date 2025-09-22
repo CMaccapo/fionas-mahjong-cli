@@ -7,6 +7,7 @@ export default class Player {
     this.hand = new Hand();
     this.points = 0;
     this.dealer = false;
+    this.pendingReplacements = 0;
   }
 
   isDealer() {

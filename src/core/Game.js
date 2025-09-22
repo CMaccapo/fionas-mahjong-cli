@@ -12,16 +12,49 @@ export default class Game {
   }
 
   setup() {
+
     for (const player of this.players){
+      this.drawInitialHands(player);
+      this.replaceInitialPoints(player);
+    }
+
+
+
+    this.players.forEach(p => console.log(p.hand.toString()));
+  }
+
+  drawInitialHands(player){
       while(player.hand.tiles.length < 16){
         for (let i = 0; i<4; i++){
           player.hand.addTile(this.wall.drawFromHead());
         }
       }
+    if (player.dealer) {
+      player.hand.addTile(this.wall.drawFromHead());
     }
-    this.players[0].hand.addTile(this.wall.drawFromHead());
+  }
+  replaceInitialPoints(player) {
+    player.pendingReplacements = player.hand.pointsTiles.length;
+    let handLen = 16;
+    if (player.dealer) handLen = 17;
+    
+    while (player.hand.playableTiles.length < handLen) {
+      this.drawPendingReplacements(player);
+    }
+  }
 
-    this.players.forEach(p => console.log(p.hand.toString()));
+  drawPendingReplacements(player) {
+    let toDraw = player.pendingReplacements;
+    player.pendingReplacements = 0;
+    for (let i = 0; i < toDraw; i++){
+      const newTile = this.wall.drawFromTail();
+
+      player.hand.addTile(newTile);
+
+      if (newTile.type === "points") {
+        player.pendingReplacements++;
+      }
+    }
   }
 
   exchangePointsPhase() {
