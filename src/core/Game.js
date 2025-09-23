@@ -12,8 +12,8 @@ export default class Game {
   }
 
   setup() {
-    this.chooseDealer();
-    console.log()
+    let dealer = this.chooseDealer();
+    this.chooseWallBreak(dealer);
     for (const player of this.players){
       this.drawInitialHands(player);
       this.replaceInitialPoints(player);
@@ -33,7 +33,7 @@ export default class Game {
 
       for (const player of contenders) {
         const dice = (Math.floor(Math.random() * 6) + 1) +
-                    (Math.floor(Math.random() * 6) + 1);
+                     (Math.floor(Math.random() * 6) + 1);
         rolls.set(player, dice);
         console.log(`${player.name} rolls ${dice}`);
 
@@ -57,6 +57,23 @@ export default class Game {
     console.log(
       `${dealer.name} is the dealer! (decided after ${attempt} attempt${attempt > 1 ? "s" : ""})`
     );
+    
+    return dealer;
+  }
+  
+  chooseWallBreak(dealer) {
+    const roll = (Math.floor(Math.random() * 6) + 1) +
+                 (Math.floor(Math.random() * 6) + 1);
+
+    const seats = ["N", "W", "S", "E"];
+    const dealerIndex = seats.indexOf(dealer.placement);
+
+    const rotated = seats.slice(dealerIndex).concat(seats.slice(0, dealerIndex));
+
+    const choice = rotated[(roll - 1) % 4];
+
+    console.log(`Roll: ${roll}: Wall break: ${choice}`);
+    return choice;
   }
     
 
