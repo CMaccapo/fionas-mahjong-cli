@@ -91,9 +91,8 @@ export default class Wall {
     let arr = Array(arrLen).fill(0);
     arr[0] = "H";
     arr[arrLen-1] = "T";
-    console.log(this.break+arrLen/2, start);
 
-    for (let row = 0; row < sideLen+1; row++){
+    for (let row = sideLen; row >= 0; row--){
         for (let col = 0; col < sideLen+1; col++){
             if (row === 0){
                 if (arr[arrLen-start+col] !== undefined) {

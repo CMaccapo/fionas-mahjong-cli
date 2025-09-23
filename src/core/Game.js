@@ -9,11 +9,12 @@ export default class Game {
     this.wall = new Wall();
     this.boneyard = new Boneyard();
     this.players = players;
+    this.dealer = null;
   }
 
   setup() {
-    const dealer = this.rollDealer();
-    const roll = this.rollWallBreak(dealer);
+    this.dealer = this.rollDealer();
+    const roll = this.rollWallBreak(this.dealer);
     this.breakWall(roll);
 
     for (const player of this.players){
@@ -80,9 +81,11 @@ export default class Game {
 
   breakWall(roll){
     const sideLen = this.wall.allTiles.length / 4;
-    const counts = (roll - 1) % 4;
-
-    const breakIndex = (sideLen*counts) + (sideLen - roll*2);
+    const seats = ["N", "W", "S", "E"];
+    const dealerIndex = seats.indexOf(this.dealer.placement);
+    const counts = (roll - 1+ dealerIndex) % 4; // 0 N 1 W 2 S 3 E
+    
+    const breakIndex = (sideLen*counts) - (roll*2);
     this.wall.break = breakIndex;
     this.wall.printSquare();
   }
