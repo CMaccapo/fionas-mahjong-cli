@@ -12,8 +12,10 @@ export default class Game {
   }
 
   setup() {
-    let dealer = this.chooseDealer();
-    this.chooseWallBreak(dealer);
+    const dealer = this.rollDealer();
+    const roll = this.rollWallBreak(dealer);
+    this.breakWall(roll);
+
     for (const player of this.players){
       this.drawInitialHands(player);
       this.replaceInitialPoints(player);
@@ -22,7 +24,7 @@ export default class Game {
     this.players.forEach(p => console.log(p.hand.toString()));
   }
 
-  chooseDealer(maxRerolls = 3) {
+  rollDealer(maxRerolls = 3) {
     let contenders = this.players;
     let attempt = 0;
 
@@ -60,8 +62,8 @@ export default class Game {
     
     return dealer;
   }
-  
-  chooseWallBreak(dealer) {
+
+  rollWallBreak(dealer) {
     const roll = (Math.floor(Math.random() * 6) + 1) +
                  (Math.floor(Math.random() * 6) + 1);
 
@@ -70,12 +72,20 @@ export default class Game {
 
     const rotated = seats.slice(dealerIndex).concat(seats.slice(0, dealerIndex));
 
-    const choice = rotated[(roll - 1) % 4];
+    const breakDir = rotated[(roll - 1) % 4];
 
-    console.log(`Roll: ${roll}: Wall break: ${choice}`);
-    return choice;
+    console.log(`Roll: ${roll}: Wall break: ${breakDir}`);
+    return roll;
   }
-    
+
+  breakWall(roll){
+    const sideLen = this.wall.allTiles.length / 4;
+    const counts = (roll - 1) % 4;
+
+    const breakIndex = (sideLen*counts) + (sideLen - roll*2);
+    this.wall.break = breakIndex;
+    this.wall.printSquare();
+  }
 
   drawInitialHands(player){
       while(player.hand.tiles.length < 16){
