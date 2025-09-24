@@ -79,7 +79,7 @@ export default class Wall {
     return tile;
   }
 
-  drawGolden() {
+  drawWild() {
     return this.drawFromTail();
   }
 

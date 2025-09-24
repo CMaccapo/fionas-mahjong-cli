@@ -10,6 +10,13 @@ export default class Game {
     this.boneyard = new Boneyard();
     this.players = players;
     this.dealer = null;
+    this.wild = null;
+  }
+  
+  start() {
+    this.setup();
+    this.mainPlayPhase();
+    this.scoringPhase();
   }
 
   setup() {
@@ -21,6 +28,8 @@ export default class Game {
       this.drawInitialHands(player);
       this.replaceInitialPoints(player);
     }
+    this.wild = this.wall.drawWild();
+
     this.wall.printSquare();
     this.players.forEach(p => console.log(p.hand.toString()));
   }
@@ -125,13 +134,6 @@ export default class Game {
     }
   }
 
-  exchangePointsPhase() {
-    // Handle point tile exchange
-  }
-
-  goldenTilePhase() {
-    // Draw golden tile from tail
-  }
 
   mainPlayPhase() {
     // Game loop: takeTurn until win
@@ -139,14 +141,6 @@ export default class Game {
 
   scoringPhase() {
     // Calculate and assign points
-  }
-
-  start() {
-    this.setup();
-    this.exchangePointsPhase();
-    this.goldenTilePhase();
-    this.mainPlayPhase();
-    this.scoringPhase();
   }
 
   takeTurn(player) {
