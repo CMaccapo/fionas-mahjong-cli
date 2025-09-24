@@ -23,13 +23,6 @@ export default class Game {
     this.dealer = this.rollDealer();
     const roll = this.rollWallBreak(this.dealer);
     this.breakWall(roll);
-
-    this.wall.drawFromHead(); 
-    this.wall.drawFromHead(); 
-    this.wall.drawFromHead(); 
-    this.wall.drawFromHead(); 
-    this.wall.drawFromHead(); 
-    this.wall.printSquare();
   
     for (const player of this.players){
       this.drawInitialHands(player);
@@ -37,7 +30,7 @@ export default class Game {
     }
     this.wild = this.wall.drawWild();
 
-    //this.wall.printSquare();
+    this.wall.printSquare();
     //this.players.forEach(p => console.log(p.hand.toString()));
   }
 
