@@ -68,16 +68,25 @@ export default class Wall {
     }
   }
 
-  drawFromHead() {
+  async drawFromHead() {
     const tile = this.tiles.shift();
     this.printArr.shift();
+
+    await sleep(100);
+    console.clear(); 
     this.printSquare();
+
     return tile;
   }
 
-  drawFromTail() {
+  async drawFromTail() {
     const tile = this.tiles.pop();
     this.printArr.pop();
+
+    await sleep(100);
+    console.clear(); 
+    this.printSquare();
+
     return tile;
   }
 
@@ -121,6 +130,7 @@ export default class Wall {
     lines[0] += "   ";
     lines[sideLen] += "   ";
     for (let line of lines){
+        line = "  "+line;
         line = line.replace(/H   /g, "⚈ ⊃⥽");
         line = line.replace(/   H/g, "⥼⊂ ⚈");
         console.log(line);
@@ -155,3 +165,6 @@ function addHeadTailMarkers(arr) {
   return out;
 }
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

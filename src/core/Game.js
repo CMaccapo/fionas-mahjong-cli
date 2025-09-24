@@ -1,6 +1,7 @@
 import Wall from "../models/Wall.js";
 import Player from "../models/Player.js";
 import Boneyard from "../models/Boneyard.js";
+import { drawFromWall, drawFromBoneyard, discardTile } from "./Actions.js";
 
 export default class Game {
   constructor(players, ui) {
@@ -13,25 +14,36 @@ export default class Game {
     this.wild = null;
   }
   
-  start() {
-    this.setup();
+  async start() {
+    await this.setup();
     this.mainPlayPhase();
     this.scoringPhase();
   }
 
-  setup() {
+  async setup() {
     this.dealer = this.rollDealer();
+    const dealerIndex = this.players.findIndex(p => p.dealer);
+    if (dealerIndex > 0) {
+        // rotate array so dealer is first
+        this.players = [
+            ...this.players.slice(dealerIndex),
+            ...this.players.slice(0, dealerIndex)
+        ];
+    }
+
     const roll = this.rollWallBreak(this.dealer);
     this.breakWall(roll);
   
     for (const player of this.players){
-      this.drawInitialHands(player);
-      this.replaceInitialPoints(player);
+      await this.drawInitialHands(player);
+    }
+    for (const player of this.players){
+      await this.replaceInitialPoints(player);
     }
     this.wild = this.wall.drawWild();
 
     this.wall.printSquare();
-    //this.players.forEach(p => console.log(p.hand.toString()));
+    this.players.forEach(p => console.log(p.hand.toString()));
   }
 
   rollDealer(maxRerolls = 3) {
@@ -99,32 +111,32 @@ export default class Game {
 
   }
 
-  drawInitialHands(player){
+  async drawInitialHands(player){
     while(player.hand.tiles.length < 16){
       for (let i = 0; i<4; i++){
-        player.hand.addTile(this.wall.drawFromHead());
+        player.hand.addTile(await drawFromWall(this, player, "head"));
       }
     }
     if (player.dealer) {
-      player.hand.addTile(this.wall.drawFromHead());
+      player.hand.addTile(await drawFromWall(this, player, "head"));
     }
   }
 
-  replaceInitialPoints(player) {
+  async replaceInitialPoints(player) {
     player.pendingReplacements = player.hand.pointsTiles.length;
     let handLen = 16;
     if (player.dealer) handLen = 17;
     
     while (player.hand.playableTiles.length < handLen) {
-      this.drawPendingReplacements(player);
+      await this.drawPendingReplacements(player);
     }
   }
 
-  drawPendingReplacements(player) {
+  async drawPendingReplacements(player) {
     let toDraw = player.pendingReplacements;
     player.pendingReplacements = 0;
     for (let i = 0; i < toDraw; i++){
-      const newTile = this.wall.drawFromTail();
+      const newTile = await drawFromWall(this, player, "tail")
 
       player.hand.addTile(newTile);
 

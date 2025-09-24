@@ -12,4 +12,4 @@ const players = [
 const ui = new ConsoleUI();
 const game = new Game(players, ui);
 
-game.start();
+await game.start();
