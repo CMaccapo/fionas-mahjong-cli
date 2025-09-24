@@ -1,13 +1,13 @@
 {
-  "name": "rosies-mahjong-cli",
+  "name": "fionas-mahjong-cli",
   "version": "1.0.0",
   "description": "",
   "type": "module",
   "bin": {
-    "rosies-mahjong-cli": "bin/rosies.js"
+    "fionas-mahjong-cli": "bin/fionas.js"
   },
   "scripts": {
-    "start": "node bin/rosies.js",
+    "start": "node bin/fionas.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
