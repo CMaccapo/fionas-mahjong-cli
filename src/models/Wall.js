@@ -94,31 +94,20 @@ export default class Wall {
 
     for (let row = sideLen; row >= 0; row--){
         for (let col = 0; col < sideLen+1; col++){
+            let char = "";
             if (row === 0){
-                if (arr[arrLen-start+col] !== undefined) {
-                    lines[0] += arr[arrLen-start+col] + " ";
-                }
-                else if (arr[col-start] !== undefined) {
-                    lines[0] += arr[col-start] + " ";
-                }
+                char = arr[invertIfNegative(arrLen, col-start)];
+                lines[0] += char + " ".repeat(symbolLen);
             }
             else if (row < sideLen) {
-                let firstChar = " ";
-                let x = sideLen+(row-start);
+                let firstChar = arr[invertIfNegative(arrLen, arrLen-row-start)];
+                let lastChar = arr[invertIfNegative(arrLen, sideLen+(row-start))];
 
-                if (arr[arrLen-(row+start)] !== undefined) firstChar = arr[arrLen-(row+start)];
-                else firstChar = arr[arrLen+(arrLen-(row+start))];
-                if (arr[sideLen+(row-start)] === undefined) x = arrLen+(sideLen+(row-start));
-
-                lines[row] = `${firstChar}${" ".repeat(sideLen*(symbolLen+1)+symbolLen)}${arr[x]}`;
+                lines[row] = `${firstChar}${" ".repeat(sideLen*symbolLen*2+symbolLen)}${lastChar}`;
             }
             else {
-                if (arr[arrLen-(sideLen+col+start)] === undefined) {
-                    lines[sideLen] += arr[arrLen+(arrLen-(sideLen+col+start))] + " ";
-                }
-                else{
-                    lines[sideLen] += arr[arrLen-(sideLen+col+start)] + " ";
-                }
+                char =  arr[invertIfNegative(arrLen, arrLen-(sideLen+col+start))];
+                lines[sideLen] += char + " ".repeat(symbolLen);
             }
         }
     }
@@ -126,4 +115,11 @@ export default class Wall {
         console.log(line);
     }
   }
+}
+
+function invertIfNegative(arrLen, index) {
+    if (index < 0) {
+        return arrLen + index;
+    }
+    return index ;
 }
