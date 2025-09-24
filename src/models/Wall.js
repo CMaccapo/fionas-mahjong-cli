@@ -8,9 +8,10 @@ export default class Wall {
     this.shuffle();
     this._break = null;
 
-    const stackCount = Math.ceil(this.tiles.length / 3);
-    this.printArr = new DecayArray(stackCount, 3);
+    const stackCount = Math.ceil(this.tiles.length / 2);
+    this.printArr = new DecayArray(stackCount, 2);
   }
+
 
   set break(breakIndex) {
     this._break = breakIndex;
@@ -69,13 +70,13 @@ export default class Wall {
 
   drawFromHead() {
     const tile = this.tiles.shift();
-    this.printArr.shift(); // decay from head
+    this.printArr.shift(); 
     return tile;
   }
 
   drawFromTail() {
     const tile = this.tiles.pop();
-    this.printArr.pop(); // decay from tail
+    this.printArr.pop();
     return tile;
   }
 

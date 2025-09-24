@@ -31,6 +31,7 @@ export default class Game {
     this.wild = this.wall.drawWild();
 
     this.wall.printSquare();
+
     this.players.forEach(p => console.log(p.hand.toString()));
   }
 
@@ -89,22 +90,22 @@ export default class Game {
   }
 
   breakWall(roll){
-    const sideLen = this.wall.allTiles.length / 4;
+    const sideLen = this.wall.printArr.length / 4;
     const seats = ["N", "W", "S", "E"];
     const dealerIndex = seats.indexOf(this.dealer.placement);
     const counts = (roll - 1+ dealerIndex) % 4; // 0 N 1 W 2 S 3 E
     
-    const breakIndex = (sideLen*counts) - (roll*2);
+    const breakIndex = (sideLen*counts) - (roll);
     this.wall.break = breakIndex;
 
   }
 
   drawInitialHands(player){
-      while(player.hand.tiles.length < 16){
-        for (let i = 0; i<4; i++){
-          player.hand.addTile(this.wall.drawFromHead());
-        }
+    while(player.hand.tiles.length < 16){
+      for (let i = 0; i<4; i++){
+        player.hand.addTile(this.wall.drawFromHead());
       }
+    }
     if (player.dealer) {
       player.hand.addTile(this.wall.drawFromHead());
     }

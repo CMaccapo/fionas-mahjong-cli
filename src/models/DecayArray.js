@@ -1,5 +1,5 @@
 export default class DecayArray {
-    constructor(size, initialValue = 3) {
+    constructor(size, initialValue = 2) {
         for (let i = 0; i < size; i++) {
             this[i] = initialValue;
         }
@@ -25,7 +25,6 @@ export default class DecayArray {
     }
 
     _decrement(value) {
-        if (value === 3) return 2;
         if (value === 2) return 1;
         if (value === 1) return " ";
         return " ";
