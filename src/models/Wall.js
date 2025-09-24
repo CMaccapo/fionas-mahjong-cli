@@ -96,6 +96,7 @@ export default class Wall {
         for (let col = 0; col < sideLen+1; col++){
             let char = "";
             if (row === 0){
+                if (col === sideLen) lines[0] += " ".repeat(symbolLen);
                 char = arr[invertIfNegative(arrLen, col-start)];
                 lines[0] += char + " ".repeat(symbolLen);
             }
@@ -103,9 +104,10 @@ export default class Wall {
                 let firstChar = arr[invertIfNegative(arrLen, arrLen-row-start)];
                 let lastChar = arr[invertIfNegative(arrLen, sideLen+(row-start))];
 
-                lines[row] = `${firstChar}${" ".repeat(sideLen*symbolLen*2+symbolLen)}${lastChar}`;
+                lines[row] = `${firstChar}${" ".repeat(sideLen*symbolLen*2+symbolLen+1)}${lastChar}`;
             }
             else {
+                if (col === 1) lines[sideLen] += " ".repeat(symbolLen)
                 char =  arr[invertIfNegative(arrLen, arrLen-(sideLen+col+start))];
                 lines[sideLen] += char + " ".repeat(symbolLen);
             }
