@@ -1,4 +1,5 @@
 import Tile from "./Tile.js";
+import DecayArray from "./DecayArray.js";
 
 export default class Wall {
   constructor() {
@@ -6,6 +7,9 @@ export default class Wall {
     this.tiles = [...this.allTiles];
     this.shuffle();
     this._break = null;
+
+    const stackCount = Math.ceil(this.tiles.length / 3);
+    this.printArr = new DecayArray(stackCount, 3);
   }
 
   set break(breakIndex) {
@@ -30,7 +34,6 @@ export default class Wall {
     }
 
     // --- Winds (16) ---
-    const winds = ["winds"];
     for (let value = 1; value <= 4; value++) {
       for (let i = 0; i < 4; i++) {
         tiles.push(new Tile("winds", value, "points"));
@@ -38,7 +41,6 @@ export default class Wall {
     }
 
     // --- Dragons (12) ---
-    const dragons = ["dragons"];
     for (let value = 1; value <= 3; value++) {
       for (let i = 0; i < 4; i++) {
         tiles.push(new Tile("dragons", value, "points"));
@@ -66,49 +68,49 @@ export default class Wall {
   }
 
   drawFromHead() {
-    return this.tiles.shift();
+    const tile = this.tiles.shift();
+    this.printArr.shift(); // decay from head
+    return tile;
   }
 
   drawFromTail() {
-    return this.tiles.pop();
+    const tile = this.tiles.pop();
+    this.printArr.pop(); // decay from tail
+    return tile;
   }
 
   drawGolden() {
     return this.drawFromTail();
   }
 
-  printSquare(){
-    const arrLen = this.tiles.length;
-    const compressLen = 1;
-    const sideLen = (arrLen / 4) / compressLen;
-    const start = (arrLen - this.break)%arrLen;
+  printSquare() {
+    const arr = this.printArr.toArray();
+    const arrLen = arr.length;
+    const sideLen = arrLen / 4;
+    const start = (arrLen - this.break) % arrLen;
     const symbolLen = 1;
-    
+
     let lines = [];
     lines[0] = "  ";
     lines[sideLen] = "";
-
-    let arr = Array(arrLen).fill(0);
-    arr[0] = "H";
-    arr[arrLen-1] = "T";
 
     for (let row = sideLen; row >= 0; row--){
         for (let col = 0; col < sideLen+1; col++){
             let char = "";
             if (row === 0){
-                if (col === sideLen) lines[0] += " ".repeat(symbolLen);
-                char = arr[invertIfNegative(arrLen, col-start)];
+                if (col === sideLen) lines[0] += " ".repeat(symbolLen)
+                char = arr[wrapIndex(arrLen, col-start)];
                 lines[0] += char + " ".repeat(symbolLen);
             }
             else if (row < sideLen) {
-                let firstChar = arr[invertIfNegative(arrLen, arrLen-row-start)];
-                let lastChar = arr[invertIfNegative(arrLen, sideLen+(row-start))];
+                let firstChar = arr[wrapIndex(arrLen, arrLen-row-start)];
+                let lastChar = arr[wrapIndex(arrLen, sideLen+(row-start))];
 
                 lines[row] = `${firstChar}${" ".repeat(sideLen*symbolLen*2+symbolLen+1)}${lastChar}`;
             }
             else {
                 if (col === 1) lines[sideLen] += " ".repeat(symbolLen)
-                char =  arr[invertIfNegative(arrLen, arrLen-(sideLen+col+start))];
+                char =  arr[wrapIndex(arrLen, arrLen-(sideLen+col+start))];
                 lines[sideLen] += char + " ".repeat(symbolLen);
             }
         }
@@ -119,9 +121,6 @@ export default class Wall {
   }
 }
 
-function invertIfNegative(arrLen, index) {
-    if (index < 0) {
-        return arrLen + index;
-    }
-    return index ;
+function wrapIndex(arrLen, index) {
+  return ((index % arrLen) + arrLen) % arrLen;
 }

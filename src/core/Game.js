@@ -16,12 +16,12 @@ export default class Game {
     this.dealer = this.rollDealer();
     const roll = this.rollWallBreak(this.dealer);
     this.breakWall(roll);
-
+  
     for (const player of this.players){
       this.drawInitialHands(player);
       this.replaceInitialPoints(player);
     }
-
+    this.wall.printSquare();
     this.players.forEach(p => console.log(p.hand.toString()));
   }
 
@@ -87,7 +87,7 @@ export default class Game {
     
     const breakIndex = (sideLen*counts) - (roll*2);
     this.wall.break = breakIndex;
-    this.wall.printSquare();
+
   }
 
   drawInitialHands(player){
