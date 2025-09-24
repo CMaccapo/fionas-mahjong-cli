@@ -42,8 +42,8 @@ export default class Game {
     }
     this.wild = this.wall.drawWild();
 
-    this.wall.printSquare();
-    this.players.forEach(p => console.log(p.hand.toString()));
+    this.ui.renderBoard(this);
+    //this.players.forEach(p => console.log(p.hand.toString()));
   }
 
   rollDealer(maxRerolls = 3) {

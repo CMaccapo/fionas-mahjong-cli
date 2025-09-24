@@ -72,20 +72,12 @@ export default class Wall {
     const tile = this.tiles.shift();
     this.printArr.shift();
 
-    await sleep(100);
-    console.clear(); 
-    this.printSquare();
-
     return tile;
   }
 
   async drawFromTail() {
     const tile = this.tiles.pop();
     this.printArr.pop();
-
-    await sleep(100);
-    console.clear(); 
-    this.printSquare();
 
     return tile;
   }
@@ -163,8 +155,4 @@ function addHeadTailMarkers(arr) {
   }
 
   return out;
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
