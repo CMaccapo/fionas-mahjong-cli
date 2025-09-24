@@ -70,7 +70,8 @@ export default class Wall {
 
   drawFromHead() {
     const tile = this.tiles.shift();
-    this.printArr.shift(); 
+    this.printArr.shift();
+    this.printSquare();
     return tile;
   }
 
@@ -134,19 +135,23 @@ function wrapIndex(arrLen, index) {
 function addHeadTailMarkers(arr) {
   const out = [...arr]; // shallow copy
 
-  // find all empty slots
+  // find indices of all empty slots (" ")
   const emptyIndices = out
     .map((v, i) => (v === " " ? i : -1))
     .filter(i => i !== -1);
 
-  // only add H and T if there are at least 2 empty slots
+  // only add H/T if there are at least 2 empty slots
   if (emptyIndices.length >= 2) {
-    const tailIndex = emptyIndices[0];
-    const headIndex = emptyIndices[emptyIndices.length - 1];
+    // Head: last empty slot before the first non-empty number from the start
+    const headIndex = emptyIndices.findLast(i => i < out.findIndex(v => v !== " "));
+    
+    // Tail: first empty slot after the last non-empty number from the end
+    const tailIndex = emptyIndices.find(i => i > out.length - 1 - [...out].reverse().findIndex(v => v !== " "));
 
-    out[headIndex] = "H";
-    out[tailIndex] = "T";
+    if (headIndex !== undefined) out[headIndex] = "H";
+    if (tailIndex !== undefined && tailIndex !== headIndex) out[tailIndex] = "T";
   }
 
   return out;
 }
+
