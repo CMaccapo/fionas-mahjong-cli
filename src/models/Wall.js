@@ -12,7 +12,7 @@ export default class Wall {
     this.printArr = new DecayArray(stackCount, 2);
   }
 
-
+  
   set break(breakIndex) {
     this._break = breakIndex;
   }
@@ -85,7 +85,8 @@ export default class Wall {
   }
 
   printSquare() {
-    const arr = this.printArr.toArray();
+    let arr = this.printArr.toArray();
+    arr = addHeadTailMarkers(arr);
     const arrLen = arr.length;
     const sideLen = arrLen / 4;
     const start = (arrLen - this.break) % arrLen;
@@ -107,7 +108,7 @@ export default class Wall {
                 let firstChar = arr[wrapIndex(arrLen, arrLen-row-start)];
                 let lastChar = arr[wrapIndex(arrLen, sideLen+(row-start))];
 
-                lines[row] = `${firstChar}${" ".repeat(sideLen*symbolLen*2+symbolLen+1)}${lastChar}`;
+                lines[row] = `${firstChar}${" ".repeat(sideLen*symbolLen*2+symbolLen+1)}${lastChar}  `;
             }
             else {
                 if (col === 1) lines[sideLen] += " ".repeat(symbolLen)
@@ -116,7 +117,11 @@ export default class Wall {
             }
         }
     }
-    for (const line of lines){
+    lines[0] += "   ";
+    lines[sideLen] += "   ";
+    for (let line of lines){
+        line = line.replace(/H   /g, "⚈ ⊃⥽");
+        line = line.replace(/   H/g, "⥼⊂ ⚈");
         console.log(line);
     }
   }
@@ -124,4 +129,24 @@ export default class Wall {
 
 function wrapIndex(arrLen, index) {
   return ((index % arrLen) + arrLen) % arrLen;
+}
+
+function addHeadTailMarkers(arr) {
+  const out = [...arr]; // shallow copy
+
+  // find all empty slots
+  const emptyIndices = out
+    .map((v, i) => (v === " " ? i : -1))
+    .filter(i => i !== -1);
+
+  // only add H and T if there are at least 2 empty slots
+  if (emptyIndices.length >= 2) {
+    const tailIndex = emptyIndices[0];
+    const headIndex = emptyIndices[emptyIndices.length - 1];
+
+    out[headIndex] = "H";
+    out[tailIndex] = "T";
+  }
+
+  return out;
 }
