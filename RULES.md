@@ -3,6 +3,7 @@
 ## General
 
 ### Players and Turns
+
 - 2-4 players arranged on any sides of the wall (square).
 - Direction: Turns (regular gameplay and dealer) always go to the right (counter-clockwise).
 
@@ -21,7 +22,7 @@ Mahjong is played in hands. Players get points only if they win a hand. Games go
 
 These are the main tiles used for making sets. There are 3 suits:
 
-1.  (4x9) Circles (1-9)
+1. (4x9) Circles (1-9)
 2. (4x9) Sticks (1-9)
 3. (4x9) Characters (1-9)
 
@@ -35,9 +36,10 @@ Any point tile = 1 point after winning.
 - (1x4) Seasons (Spring, Summer, Autumn, Winter)
 
 ### Player's Hand Tiles
-Players should have: 
 
-- 16 playable tiles if it is not their turn 
+Players should have:
+
+- 16 playable tiles if it is not their turn
 - 17 playable tiles if it is their turn
 
 ### Sets
@@ -50,6 +52,7 @@ The hand is arranged to make 5 sets of 3 and 1 pair (17 total tiles).
 4. Pair - 2 of the same tile
 
 ### The Wall
+
 - 4 sides (of 2x18) with break
 - Head: left of the break
 - Tail: right of the break
@@ -87,16 +90,18 @@ Tiles can be gotten from
 
 1. Players set aside any point tiles.
 2. On their turn, players get as many tiles from the Tail of the wall as points they drew last round.
+
 - At the end of this phase, the dealer should have 17 playable tiles, and the others should have 16.
 
-### Golden Tile
+### Wild Tile
 
-The dealer draws from the Tail until they get a playable tile. Place it face-up on the tail. 
-This is the Golden Tile. Any tiles matching this are Wild Tiles and can be substituted for any other tiles in the hand.
+The dealer draws from the Tail until they get a playable tile. Place it face-up on the tail.
+This is a Wild Tile. Wild Tiles and can be substituted for any other tiles in the hand.
 
 ### Main Game
 
 On a player's turn they:
+
 1. Draw a tile (from the wall or boneyard)
 2. Call mahjong or discard a tile to the boneyard
 
@@ -109,15 +114,15 @@ On a player's turn they:
 
 Call Pong/Kong/Mahjong
 
--  If a player is one away from Pong, Kong, or Mahjong, they can call it at any time the last tile they need is dropped to force their turn and draw that tile.
+- If a player is one away from Pong, Kong, or Mahjong, they can call it at any time the last tile they need is dropped to force their turn and draw that tile.
 
 ### Mahjong: End Hand
 
-When a player has 5 sets of 3 and 1 pair, they can call mahjong to win the hand. 
+When a player has 5 sets of 3 and 1 pair, they can call mahjong to win the hand.
 
 #### Mahjong Special Cases
 
-If a player is 1 tile from mahjong during their first turn, they can grab the Golden Tile from the wall and win. 
+If a player is 1 tile from mahjong during their first turn, they can grab the Golden Tile from the wall and win.
 If a player has 3 wild tiles, they win.
 
 ### Points Calculation
