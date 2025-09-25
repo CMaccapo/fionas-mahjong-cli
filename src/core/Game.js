@@ -44,7 +44,7 @@ export default class Game {
     }
     this.wild = this.wall.drawWild();
 
-    this.ui.renderBoard(this);
+    //this.ui.renderBoard(this);
     //this.players.forEach(p => console.log(p.hand.toString()));
   }
 
@@ -171,7 +171,7 @@ export default class Game {
   }
 
   async takeTurn() {
-    console.clear();
+    //console.clear();
     if (this.currentPlayer.hand.playableTiles.length === 16){
       const choiceGrab = await this.ui.askGrab(this.currentPlayer);
       const resultGrab = await Actions.execGrab(choiceGrab, this);

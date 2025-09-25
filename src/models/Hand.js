@@ -24,8 +24,18 @@ export default class Hand {
   }
 
   removeTile(tile) {
+    if (!Array.isArray(this.tiles)) {
+      console.error('tiles is not an array');
+      return false;
+    }
+
     const idx = this.tiles.indexOf(tile);
-    if (idx >= 0) this.tiles.splice(idx, 1);
+    if (idx >= 0) {
+      this.tiles.splice(idx, 1);
+      return true;
+    }
+
+    return false;
   }
 
   toString() {
