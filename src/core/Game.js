@@ -1,7 +1,8 @@
 import Wall from "../models/Wall.js";
 import Player from "../models/Player.js";
 import Boneyard from "../models/Boneyard.js";
-import { drawFromWall, drawFromBoneyard, discardTile } from "./Actions.js";
+import Actions from "./Actions.js";
+
 
 export default class Game {
   constructor(players, ui) {
@@ -10,13 +11,14 @@ export default class Game {
     this.wall = new Wall();
     this.boneyard = new Boneyard();
     this.players = players;
+    this.currentPlayer = null;
     this.dealer = null;
     this.wild = null;
   }
   
   async start() {
     await this.setup();
-    this.mainPlayPhase();
+    await this.mainPlayPhase();
     this.scoringPhase();
   }
 
@@ -24,12 +26,12 @@ export default class Game {
     this.dealer = this.rollDealer();
     const dealerIndex = this.players.findIndex(p => p.dealer);
     if (dealerIndex > 0) {
-        // rotate array so dealer is first
         this.players = [
             ...this.players.slice(dealerIndex),
             ...this.players.slice(0, dealerIndex)
         ];
     }
+    this.currentPlayer = this.players[0];
 
     const roll = this.rollWallBreak(this.dealer);
     this.breakWall(roll);
@@ -114,11 +116,11 @@ export default class Game {
   async drawInitialHands(player){
     while(player.hand.tiles.length < 16){
       for (let i = 0; i<4; i++){
-        player.hand.addTile(await drawFromWall(this, player, "head"));
+        player.hand.addTile(await Actions.drawFromWall(this, player, "head"));
       }
     }
     if (player.dealer) {
-      player.hand.addTile(await drawFromWall(this, player, "head"));
+      player.hand.addTile(await Actions.drawFromWall(this, player, "head"));
     }
   }
 
@@ -136,7 +138,7 @@ export default class Game {
     let toDraw = player.pendingReplacements;
     player.pendingReplacements = 0;
     for (let i = 0; i < toDraw; i++){
-      const newTile = await drawFromWall(this, player, "tail")
+      const newTile = await Actions.drawFromWall(this, player, "tail")
 
       player.hand.addTile(newTile);
 
@@ -147,20 +149,49 @@ export default class Game {
   }
 
 
-  mainPlayPhase() {
-    // Game loop: takeTurn until win
+  async mainPlayPhase() {
+    while (!this.handIsOver()){
+      let valid = false;
+      let error = null;
+
+      while (!valid) {
+        await this.ui.waitForTurn(this, error);
+        const result = await this.takeTurn();
+        if (result.success) {
+          valid = true;
+          error = null;
+        } else {
+          valid = false;
+          error = result.error;
+        }
+      }
+
+      this.rotatePlayers();
+    }
+  }
+
+  async takeTurn() {
+    console.clear();
+    //this.ui.renderBoard(this);
+    const choice = await this.ui.askAction(this.currentPlayer);
+    return await Actions.execute(choice, this);
+  }
+
+  rotatePlayers() {
+    const index = this.players.indexOf(this.currentPlayer);
+    const nextIndex = (index + 1) % this.players.length;
+    this.currentPlayer = this.players[nextIndex];
   }
 
   scoringPhase() {
     // Calculate and assign points
   }
 
-  takeTurn(player) {
-    // Draw -> discard or call
-  }
-
   endHand() {
     // Cleanup state after a hand
+  }
+  handIsOver () {
+    return false;
   }
 
   endGame() {

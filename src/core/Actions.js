@@ -1,24 +1,45 @@
-export async function drawFromWall(game, player, from = "head") {
-  const tile = from === "head" ? await game.wall.drawFromHead() : await game.wall.drawFromTail();
+const Actions = {
+  async execute(choice, game) {
+    switch (choice) {
+      case "1": {
+        
+        return { success: true };
+      }
 
-  await game.ui.renderBoard(game);
+      case "2": {
+        return { success: true };
+      }
 
-  return tile;
-}
+      case "3": {
+        return { success: true };
+      }
 
-export async function drawFromBoneyard(game, player) {
-  return game.boneyard.draw();
+      default:
+        return { success: false, error: "Invalid action choice" };
+    }
+  },
+  async drawFromWall(game, player, from = "head") {
+    const tile = from === "head" ? await game.wall.drawFromHead() : await game.wall.drawFromTail();
 
-  await game.ui.renderBoard(game);
-}
+    await game.ui.renderBoard(game);
 
-export async function discardTile(game, player, tile) {
-  game.boneyard.addTile(tile);
+    return tile;
+  },
+  async drawFromBoneyard(game, player) {
+    return game.boneyard.draw();
 
-  await game.ui.renderBoard(game);
-}
+    await game.ui.renderBoard(game);
+  },
+  async discardTile(game, player, tile) {
+    game.boneyard.addTile(tile);
 
-export function callSet(game, player, type, tiles) {
-  // type: "pong" | "kong" | "mahjong"
-  // Implementation will interact with TileRules + RuleCheck
-}
+    await game.ui.renderBoard(game);
+  },
+  callSet(game, player, type, tiles) {
+    // type: "pong" | "kong" | "mahjong"
+    // Implementation will interact with TileRules + RuleCheck
+  }
+};
+
+
+export default Actions;
