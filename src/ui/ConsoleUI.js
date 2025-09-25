@@ -22,12 +22,23 @@ export default class ConsoleUI {
       console.log(`${p.name} (${p.placement}) hand: ${p.hand.toString()}`);
     });
   }
-
-  async askAction(player) {
+  
+  async askGrab(player) {
     console.log(`${player.name}'s turn.`);
     console.log("Hand:", player.hand.toString());
     console.log("1) Grab From Wall");
     console.log("2) Grab From Boneyard");
+    let choice;
+    do {
+      choice = await this.ask("Choose action: ");
+    } while (!["1", "2"].includes(choice));
+    return choice;
+  }
+  async askFull(player) {
+    console.log(`${player.name}'s turn.`);
+    console.log("Hand:", player.hand.toString());
+    console.log("1) Discard");
+    console.log("2) Call Mahjong");
     let choice;
     do {
       choice = await this.ask("Choose action: ");

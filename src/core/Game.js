@@ -172,9 +172,13 @@ export default class Game {
 
   async takeTurn() {
     console.clear();
-    //this.ui.renderBoard(this);
-    const choice = await this.ui.askAction(this.currentPlayer);
-    return await Actions.execute(choice, this);
+    if (this.currentPlayer.hand.playableTiles.length === 16){
+      const choiceGrab = await this.ui.askGrab(this.currentPlayer);
+      const resultGrab = await Actions.execGrab(choiceGrab, this);
+      if (!resultGrab.success) return resultGrab;
+    }
+    const choiceFull = await this.ui.askFull(this.currentPlayer);
+    return await Actions.execFull(choiceFull, this);
   }
 
   rotatePlayers() {

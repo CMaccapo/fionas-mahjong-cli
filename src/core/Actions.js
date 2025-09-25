@@ -1,5 +1,5 @@
 const Actions = {
-  async execute(choice, game) {
+  async execGrab(choice, game, type) {
     switch (choice) {
       case "1": {
         
@@ -10,7 +10,18 @@ const Actions = {
         return { success: true };
       }
 
-      case "3": {
+      default:
+        return { success: false, error: "Invalid action choice" };
+    }
+  },
+  async execFull(choice, game, type) {
+    switch (choice) {
+      case "1": {
+        
+        return { success: true };
+      }
+
+      case "2": {
         return { success: true };
       }
 
