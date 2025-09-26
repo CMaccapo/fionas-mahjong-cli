@@ -1,4 +1,4 @@
-import { canDrawFromBoneyard } from "../core/RuleCheck.js";
+import { canDrawFromBoneyard, canCallMahjong } from "../core/RuleCheck.js";
 
 const Actions = {
   async execGrab(choice, game) {
@@ -40,6 +40,7 @@ const Actions = {
       }
 
       case "2": {
+        if (!canCallMahjong(game.currentPlayer)) return { success: false, error: "Can't call mahjong" };
         return { success: true };
       }
 

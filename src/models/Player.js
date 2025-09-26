@@ -19,7 +19,6 @@ export default class Player {
   }
 
   isWinning() {
-    // stub: delegate to TileRules later
     return false;
   }
 }
