@@ -15,12 +15,12 @@ export default class ConsoleUI {
   }
 
   async renderBoard(game) {
-    //console.clear();
-    await game.wall.printSquare?.(); // if printSquare exists
+    // console.clear();
+    // await game.wall.printSquare();
 
-    game.players.forEach(p => {
-      console.log(`${p.name} (${p.placement}) hand: ${p.hand.toString()}`);
-    });
+    // game.players.forEach(p => {
+    //   console.log(`${p.name} (${p.placement}) hand: ${p.hand.toString()}`);
+    // });
   }
 
   async askGrab(player) {

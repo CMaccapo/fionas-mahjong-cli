@@ -18,6 +18,9 @@ export default class Game {
   
   async start() {
     await this.setup();
+    for (const player of this.players){
+      console.log(player.hand.playableTiles.length);
+    }
     await this.mainPlayPhase();
     this.scoringPhase();
   }
@@ -171,7 +174,7 @@ export default class Game {
   }
 
   async takeTurn() {
-    //console.clear();
+    this.ui.renderBoard(this);
     if (this.currentPlayer.hand.playableTiles.length === 16){
       const choiceGrab = await this.ui.askGrab(this.currentPlayer);
       const resultGrab = await Actions.execGrab(choiceGrab, this);

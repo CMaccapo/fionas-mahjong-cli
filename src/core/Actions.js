@@ -2,6 +2,12 @@ const Actions = {
   async execGrab(choice, game) {
     switch (choice) {
       case "1": {
+        let tile = this.drawFromWall(game, game.currentPlayer, "head");
+        if (!tile) return {success: false, error: "Can't draw tile- head"};
+        while (tile.type ==="points") {
+          let tile = this.drawFromWall(game, game.currentPlayer, "tail");
+          if (!tile) return {success: false, error: "Can't draw tile- tail"};
+        }
         
         return { success: true };
       }
@@ -38,9 +44,9 @@ const Actions = {
   },
   async drawFromWall(game, player, from = "head") {
     const tile = from === "head" ? await game.wall.drawFromHead() : await game.wall.drawFromTail();
+    player.hand.addTile(tile);
 
     await game.ui.renderBoard(game);
-
     return tile;
   },
   async drawFromBoneyard(game, player) {

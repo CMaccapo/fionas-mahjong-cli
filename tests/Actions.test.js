@@ -41,10 +41,8 @@ const actionTests = {
       },
     },
   ],
-  // 🔜 add future actions here, e.g. drawFromWall, drawFromBoneyard, etc.
 };
 
-// Run tests dynamically
 for (const [actionName, cases] of Object.entries(actionTests)) {
   describe(`Actions.${actionName}`, () => {
     for (const testCase of cases) {
