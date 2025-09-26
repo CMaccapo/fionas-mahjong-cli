@@ -4,7 +4,7 @@ const Actions = {
       case "1": {
         let tile = this.drawFromWall(game, game.currentPlayer, "head");
         if (!tile) return {success: false, error: "Can't draw tile- head"};
-        while (tile.type ==="points") {
+        while (tile.type ==="points" && this.phase === "main") {
           let tile = this.drawFromWall(game, game.currentPlayer, "tail");
           if (!tile) return {success: false, error: "Can't draw tile- tail"};
         }

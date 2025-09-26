@@ -14,18 +14,17 @@ export default class Game {
     this.currentPlayer = null;
     this.dealer = null;
     this.wild = null;
+    this.phase = null;
   }
   
   async start() {
     await this.setup();
-    for (const player of this.players){
-      console.log(player.hand.playableTiles.length);
-    }
     await this.mainPlayPhase();
     this.scoringPhase();
   }
 
   async setup() {
+    this.phase = "setup";
     this.dealer = this.rollDealer();
     const dealerIndex = this.players.findIndex(p => p.dealer);
     if (dealerIndex > 0) {
@@ -36,6 +35,7 @@ export default class Game {
     }
     this.currentPlayer = this.players[0];
 
+    await this.ui.ask("Roll wall break - ENTER");
     const roll = this.rollWallBreak(this.dealer);
     this.breakWall(roll);
   
@@ -119,11 +119,11 @@ export default class Game {
   async drawInitialHands(player){
     while(player.hand.tiles.length < 16){
       for (let i = 0; i<4; i++){
-        player.hand.addTile(await Actions.drawFromWall(this, player, "head"));
+        await Actions.drawFromWall(this, player, "head");
       }
     }
     if (player.dealer) {
-      player.hand.addTile(await Actions.drawFromWall(this, player, "head"));
+      await Actions.drawFromWall(this, player, "head");
     }
   }
 
@@ -143,8 +143,6 @@ export default class Game {
     for (let i = 0; i < toDraw; i++){
       const newTile = await Actions.drawFromWall(this, player, "tail")
 
-      player.hand.addTile(newTile);
-
       if (newTile.type === "points") {
         player.pendingReplacements++;
       }
@@ -153,6 +151,7 @@ export default class Game {
 
 
   async mainPlayPhase() {
+    this.phase = "main";
     while (!this.handIsOver()){
       let valid = false;
       let error = null;

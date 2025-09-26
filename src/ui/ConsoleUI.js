@@ -16,7 +16,7 @@ export default class ConsoleUI {
 
   async renderBoard(game) {
     // console.clear();
-    // await game.wall.printSquare();
+    await game.wall.printSquare();
 
     // game.players.forEach(p => {
     //   console.log(`${p.name} (${p.placement}) hand: ${p.hand.toString()}`);
