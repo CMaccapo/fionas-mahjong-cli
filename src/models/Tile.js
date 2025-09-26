@@ -6,11 +6,10 @@ const SYMBOLS = {
 };
 
 export default class Tile {
-  constructor(suit, value, type = "playable", isWild = false) {
+  constructor(suit, value, type = "playable") {
     this.suit = suit;
     this.value = value;
     this.type = type;
-    this.isWild = isWild;
   }
 
   toString() {

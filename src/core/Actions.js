@@ -49,7 +49,7 @@ const Actions = {
     }
   },
   async drawFromWall(game, player, from = "head") {
-    const tile = from === "head" ? await game.wall.drawFromHead() : await game.wall.drawFromTail();
+    const tile = from === "head" ? game.wall.drawFromHead() : game.wall.drawFromTail();
     player.hand.addTile(tile);
 
     await game.ui.renderBoard(game);

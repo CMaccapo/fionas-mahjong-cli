@@ -16,7 +16,7 @@ export default class ConsoleUI {
 
   async renderBoard(game) {
     console.clear();
-    await game.wall.printSquare();
+    await game.wall.printSquare(game.wild);
     for (const player of game.players){
       console.log(player.name, player.hand.playableTiles.length);
     }

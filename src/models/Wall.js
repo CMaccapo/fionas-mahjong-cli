@@ -68,14 +68,14 @@ export default class Wall {
     }
   }
 
-  async drawFromHead() {
+  drawFromHead() {
     const tile = this.tiles.shift();
     this.printArr.shift();
 
     return tile;
   }
 
-  async drawFromTail() {
+  drawFromTail() {
     const tile = this.tiles.pop();
     this.printArr.pop();
 
@@ -86,7 +86,7 @@ export default class Wall {
     return this.drawFromTail();
   }
 
-  printSquare() {
+  printSquare(wild) {
     let arr = this.printArr.toArray();
     arr = addHeadTailMarkers(arr);
     const arrLen = arr.length;
@@ -121,10 +121,15 @@ export default class Wall {
     }
     lines[0] += "   ";
     lines[sideLen] += "   ";
+    
     for (let line of lines){
         line = "  "+line;
         line = line.replace(/H   /g, "⚈ ⊃⥽");
         line = line.replace(/   H/g, "⥼⊂ ⚈");
+        if (wild){
+          line = line.replace(/T   /g, wild.toString());
+          line = line.replace(/   T/g, wild.toString());
+        }
         console.log(line);
     }
   }
