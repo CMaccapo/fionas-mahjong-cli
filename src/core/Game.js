@@ -35,10 +35,12 @@ export default class Game {
     }
     this.currentPlayer = this.players[0];
 
-    await this.ui.ask("Roll wall break - ENTER");
+    await this.ui.ask(`${this.currentPlayer.name}: Roll wall break - ENTER`);
     const roll = this.rollWallBreak(this.dealer);
     this.breakWall(roll);
-  
+    this.wall.printSquare();
+
+    await this.ui.ask("Draw Initial Hands - ENTER");
     for (const player of this.players){
       await this.drawInitialHands(player);
     }
@@ -101,7 +103,7 @@ export default class Game {
 
     const breakDir = rotated[(roll - 1) % 4];
 
-    console.log(`Roll: ${roll}: Wall break: ${breakDir}`);
+    console.log(`Breaking wall at ${roll} (${breakDir})`);
     return roll;
   }
 

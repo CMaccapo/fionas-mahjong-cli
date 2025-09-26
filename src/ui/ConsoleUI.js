@@ -15,12 +15,13 @@ export default class ConsoleUI {
   }
 
   async renderBoard(game) {
-    // console.clear();
+    console.clear();
     await game.wall.printSquare();
 
     // game.players.forEach(p => {
     //   console.log(`${p.name} (${p.placement}) hand: ${p.hand.toString()}`);
     // });
+    await sleep(50);
   }
 
   async askGrab(player) {
@@ -59,4 +60,8 @@ export default class ConsoleUI {
   close() {
     this.rl.close();
   }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
