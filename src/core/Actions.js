@@ -1,3 +1,5 @@
+import { canDrawFromBoneyard } from "../core/RuleCheck.js";
+
 const Actions = {
   async execGrab(choice, game) {
     switch (choice) {
@@ -5,7 +7,7 @@ const Actions = {
         let tile = this.drawFromWall(game, game.currentPlayer, "head");
         if (!tile) return {success: false, error: "Can't draw tile- head"};
         while (tile.type ==="points" && this.phase === "main") {
-          let tile = this.drawFromWall(game, game.currentPlayer, "tail");
+          tile = this.drawFromWall(game, game.currentPlayer, "tail");
           if (!tile) return {success: false, error: "Can't draw tile- tail"};
         }
         
@@ -13,6 +15,9 @@ const Actions = {
       }
 
       case "2": {
+        if (!canDrawFromBoneyard(game.currentPlayer, game.boneyard)) return {success:false, error: "Last Boneyard tile not alive"};
+        const tile = this.drawFromBoneyard(game, game.currentPlayer);
+        if (!tile) return {success:false, error: "Null tile"};
         return { success: true };
       }
 
@@ -50,9 +55,11 @@ const Actions = {
     return tile;
   },
   async drawFromBoneyard(game, player) {
-    return game.boneyard.draw();
+    const tile = game.boneyard.draw();
+    player.hand.addTile(tile);
 
     await game.ui.renderBoard(game);
+    return tile;
   },
   async discardTile(game, player, tile) {
     if (!player.hand.removeTile(tile)) return {success: false, error: "Discard: Unable to remove tile from hand"};

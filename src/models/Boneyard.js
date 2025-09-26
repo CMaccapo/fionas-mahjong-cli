@@ -1,6 +1,7 @@
 export default class Boneyard {
   constructor() {
     this.tiles = [];
+    this.aliveTile = null;
   }
 
   addTile(tile) {
@@ -11,6 +12,7 @@ export default class Boneyard {
 
     try {
       this.tiles.push(tile);
+      this.aliveTile = tile;
       return true;
     } catch (error) {
       console.error('Failed to add tile:', error);
@@ -23,6 +25,6 @@ export default class Boneyard {
   }
 
   isLastTileAlive() {
-    return this.tiles.length > 0;
+    return  this.tiles[this.tiles.length-1] === this.aliveTile;
   }
 }

@@ -57,12 +57,13 @@ describe("Dynamic Game Test", () => {
             expect(len).toBeGreaterThanOrEqual(16);
             expect(len).toBeLessThanOrEqual(17);
           } else {
+            console.log(p.name, game.currentPlayer.name, len);
             expect(len).toBe(16);
           }
         });
       } catch (err) {
         console.error("Test failed after inputs:", inputLog);
-        throw err; // rethrow so Jest marks it failed
+        throw err;
       }
       return result;
     };
