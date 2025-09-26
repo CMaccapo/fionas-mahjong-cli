@@ -3,6 +3,7 @@ import DecayArray from "./DecayArray.js";
 
 export default class Wall {
   constructor() {
+    this.suits = ["C", "●", "┇"];
     this.allTiles = this.buildTiles();
     this.tiles = [...this.allTiles];
     this.shuffle();
@@ -25,8 +26,7 @@ export default class Wall {
     const tiles = [];
 
     // --- Playable suits (108) ---
-    const suits = ["●", "┇", "C"];
-    for (const suit of suits) {
+    for (const suit of this.suits) {
       for (let value = 1; value <= 9; value++) {
         for (let i = 0; i < 4; i++) {
           tiles.push(new Tile(suit, value, "playable"));

@@ -15,8 +15,8 @@ export default class Tile {
 
   toString() {
     if (this.suit in SYMBOLS && SYMBOLS[this.suit][this.value - 1]) {
-      return ` ${SYMBOLS[this.suit][this.value - 1]} `;
+      return `| ${SYMBOLS[this.suit][this.value - 1]} |`;
     }
-    return `${this.suit}:${this.value}`;
+    return `|${this.suit}:${this.value}|`;
   }
 }

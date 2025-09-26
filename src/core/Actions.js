@@ -17,9 +17,15 @@ const Actions = {
   async execFull(choice, game) {
     switch (choice) {
       case "1": {
-        const tileIndex = await chooseIndex(game.currentPlayer.hand, "Hand", game.ui);
-        if (!game.currentPlayer.hand.playableTiles[tileIndex]) return { success: false, error: "Invalid Tile Index" };
-        return await this.discardTile(game, game.currentPlayer, game.currentPlayer.hand.playableTiles[tileIndex]);
+        const suitIndex = await chooseIndex(game.currentPlayer.hand.printIndex("suit"), "Suit", game.ui);
+        if (!game.wall.suits[suitIndex]) return { success: false, error: "Invalid Suit Index" };
+        const suit = game.wall.suits[suitIndex];
+
+        const tileIndex = await chooseIndex(game.currentPlayer.hand.printIndex("tile"), "Tile", game.ui);
+        if (!game.currentPlayer.hand.getBySuit(suit)[tileIndex]) return { success: false, error: "Invalid Tile Index" };
+        const tile = game.currentPlayer.hand.getBySuit(suit)[tileIndex];
+        
+        return await this.discardTile(game, game.currentPlayer, tile);
       }
 
       case "2": {
