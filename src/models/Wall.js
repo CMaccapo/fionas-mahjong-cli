@@ -2,12 +2,13 @@ import Tile from "./Tile.js";
 import DecayArray from "./DecayArray.js";
 
 export default class Wall {
-  constructor() {
+  constructor(boneyard) {
     this.suits = ["C", "●", "┇"];
     this.allTiles = this.buildTiles();
     this.tiles = [...this.allTiles];
     this.shuffle();
     this._break = null;
+    this.boneyard = boneyard;
 
     const stackCount = Math.ceil(this.tiles.length / 2);
     this.printArr = new DecayArray(stackCount, 2);
@@ -131,17 +132,21 @@ export default class Wall {
   }
   getBoneyardStr(lines, row) {
     const start = 2;
-    const header = " ".repeat(9);
-    const tail = " ".repeat(9);
-    let mid = " ".repeat(20);
-    if (row === start){
-      mid = " "+ this.suits.join(" ".repeat(8));
+    let mid = " ".repeat(38);
+    if (this.boneyard.tiles.length > 0){
+      if (row >= start){
+        const i = row - start;
+        mid = " ".repeat(6);
+        for (const suit of this.suits){
+          mid += " ".repeat(2);
+          if (this.boneyard.getBySuit(suit)[i]) mid += this.boneyard.getBySuit(suit)[i];
+          else mid += " ".repeat(5);
+          mid += " ".repeat(2);
+        }
+        mid += " ".repeat(5);
+      }
     }
-    else if (row > start){
-      const i = row - start-1;
-      //mid
-    }
-    return header+mid+tail;
+    return mid;
   }
 }
 

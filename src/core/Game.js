@@ -8,8 +8,8 @@ export default class Game {
   constructor(players, ui) {
     this.ui = ui;
     this.tiles = [];
-    this.wall = new Wall();
     this.boneyard = new Boneyard();
+    this.wall = new Wall(this.boneyard);
     this.players = players;
     this.currentPlayer = null;
     this.dealer = null;
