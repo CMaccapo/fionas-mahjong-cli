@@ -106,7 +106,7 @@ export default class Wall {
                 let firstChar = arr[wrapIndex(arrLen, arrLen-row-start)];
                 let lastChar = arr[wrapIndex(arrLen, sideLen+(row-start))];
 
-                lines[row] = `${firstChar}${getBoneyardStr(lines, row)}${lastChar}  `;
+                lines[row] = `${firstChar}${this.getBoneyardStr(lines, row)}${lastChar}  `;
             }
             else {
                 if (col === 1) lines[sideLen] += " ".repeat(symbolLen)
@@ -129,17 +129,20 @@ export default class Wall {
         console.log(line);
     }
   }
-}
-
-function getBoneyardStr(lines, row) {
-  const start = 2;
-  const header = " ".repeat(9);
-  const tail = " ".repeat(9);
-  const mid = " ".repeat(20);
-  if (row === start){
-
+  getBoneyardStr(lines, row) {
+    const start = 2;
+    const header = " ".repeat(9);
+    const tail = " ".repeat(9);
+    let mid = " ".repeat(20);
+    if (row === start){
+      mid = " "+ this.suits.join(" ".repeat(8));
+    }
+    else if (row > start){
+      const i = row - start-1;
+      //mid
+    }
+    return header+mid+tail;
   }
-  return header+mid+tail;
 }
 
 function wrapIndex(arrLen, index) {

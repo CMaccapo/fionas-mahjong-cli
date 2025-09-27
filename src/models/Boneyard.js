@@ -1,15 +1,12 @@
-export default class Boneyard {
+import TileCollection from "./TileCollection.js";
+
+export default class Boneyard extends TileCollection {
   constructor() {
-    this.tiles = [];
+    super();
     this.aliveTile = null;
   }
 
   addTile(tile) {
-    if (!Array.isArray(this.tiles)) {
-      console.error('this.tiles is not an array');
-      return false;
-    }
-
     try {
       this.tiles.push(tile);
       this.aliveTile = tile;
