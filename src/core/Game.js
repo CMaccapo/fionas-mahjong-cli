@@ -47,7 +47,7 @@ export default class Game {
     for (const player of this.players){
       await this.replaceInitialPoints(player);
     }
-    this.wild = this.wall.drawWild();
+    this.wild = await Actions.drawForWild(this, this.currentPlayer);
 
     //this.ui.renderBoard(this);
     //this.players.forEach(p => console.log(p.hand.toString()));

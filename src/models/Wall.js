@@ -82,10 +82,6 @@ export default class Wall {
     return tile;
   }
 
-  drawWild() {
-    return this.drawFromTail();
-  }
-
   printSquare(wild) {
     let arr = this.printArr.toArray();
     arr = addHeadTailMarkers(arr);
@@ -110,7 +106,7 @@ export default class Wall {
                 let firstChar = arr[wrapIndex(arrLen, arrLen-row-start)];
                 let lastChar = arr[wrapIndex(arrLen, sideLen+(row-start))];
 
-                lines[row] = `${firstChar}${" ".repeat(sideLen*symbolLen*2+symbolLen+1)}${lastChar}  `;
+                lines[row] = `${firstChar}${getBoneyardStr(lines, row)}${lastChar}  `;
             }
             else {
                 if (col === 1) lines[sideLen] += " ".repeat(symbolLen)
@@ -119,7 +115,7 @@ export default class Wall {
             }
         }
     }
-    lines[0] += "   ";
+    lines[0] += "  ";
     lines[sideLen] += "   ";
     
     for (let line of lines){
@@ -133,6 +129,17 @@ export default class Wall {
         console.log(line);
     }
   }
+}
+
+function getBoneyardStr(lines, row) {
+  const start = 2;
+  const header = " ".repeat(9);
+  const tail = " ".repeat(9);
+  const mid = " ".repeat(20);
+  if (row === start){
+
+  }
+  return header+mid+tail;
 }
 
 function wrapIndex(arrLen, index) {

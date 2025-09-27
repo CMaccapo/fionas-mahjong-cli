@@ -48,8 +48,21 @@ const Actions = {
         return { success: false, error: "Invalid action choice" };
     }
   },
+  async drawForWild(game, player){
+
+    let tile = game.wall.drawFromTail();
+    while (tile.type === "points"){
+      tile = game.wall.drawFromTail();
+    }
+
+    await game.ui.renderBoard(game);
+    return tile;
+  },
   async drawFromWall(game, player, from = "head") {
-    const tile = from === "head" ? game.wall.drawFromHead() : game.wall.drawFromTail();
+    let tile
+    if (from === "head") tile = game.wall.drawFromHead();
+    else if (from === "tail") tile = game.wall.drawFromTail();
+
     player.hand.addTile(tile);
 
     await game.ui.renderBoard(game);
