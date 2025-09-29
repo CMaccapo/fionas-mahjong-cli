@@ -8,8 +8,18 @@ export function isKong(tiles) {
 
 export function isSeries(tiles) {
   if (tiles.length !== 3) return false;
-  const [a, b, c] = tiles.sort((x, y) => x.value - y.value);
-  return a.suit === b.suit && b.suit === c.suit && (b.value === a.value + 1) && (c.value === b.value + 1);
+
+  const numberSuits = ["C", "●", "┇"];
+
+  const [a, b, c] = [...tiles].sort((x, y) => x.value - y.value);
+
+  return (
+    numberSuits.includes(a.suit) &&
+    a.suit === b.suit &&
+    b.suit === c.suit &&
+    b.value === a.value + 1 &&
+    c.value === b.value + 1
+  );
 }
 
 export function isPair(tiles) {
