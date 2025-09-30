@@ -43,10 +43,11 @@ export default class ConsoleUI {
     console.log("Hand:", player.hand.toString());
     console.log("1) Discard");
     console.log("2) Call Mahjong");
+    console.log("3) Reveal Kong");
     let choice;
     do {
       choice = await this.ask("Choose action: ");
-    } while (!["1", "2"].includes(choice));
+    } while (!["1", "2", "3"].includes(choice));
     return choice;
   }
 

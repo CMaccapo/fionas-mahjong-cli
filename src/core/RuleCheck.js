@@ -10,12 +10,10 @@ export function canCallMahjong(player) {
   return player.isWinning();
 }
 
-export function canCallPong(player, tile) {
-  return player.hand.hasTwoOf(tile);
-}
-
-export function canCallKong(player, tile) {
-  return player.hand.hasThreeOf(tile);
+export function setKong(player, tile) {
+  const result = player.hand.tiles.filter( aTile => aTile.suit === tile.suit && aTile.value === tile.value);
+  if (result.length !== 4) return null;
+  return result;
 }
 
 export function formSetWithTile(player, tile) {

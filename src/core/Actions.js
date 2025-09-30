@@ -1,4 +1,4 @@
-import { canDrawFromBoneyard, canCallMahjong, formSetWithTile } from "../core/RuleCheck.js";
+import { canDrawFromBoneyard, canCallMahjong, formSetWithTile, setKong } from "../core/RuleCheck.js";
 
 const Actions = {
   async execGrab(choice, game) {
@@ -44,6 +44,21 @@ const Actions = {
         if (!canCallMahjong(game.currentPlayer)) return { success: false, error: "Can't call mahjong" };
         return { success: true };
       }
+      case "3": {
+        const suitIndex = await chooseIndex(game.currentPlayer.hand.printIndex("suit"), "Suit", game.ui);
+        if (!game.wall.suits[suitIndex]) return { success: false, error: "Invalid Suit Index" };
+        const suit = game.wall.suits[suitIndex];
+
+        const tileIndex = await chooseIndex(game.currentPlayer.hand.printIndex("tile"), "Tile", game.ui);
+        if (!game.currentPlayer.hand.getBySuit(suit)[tileIndex]) return { success: false, error: "Invalid Tile Index" };
+        const tile = game.currentPlayer.hand.getBySuit(suit)[tileIndex];
+        
+        const set = setKong(game.currentPlayer, tile);
+        if (!set) return {success: false, error: "Can't make set with this tile"};
+        
+        if (this.revealSet(game.currentPlayer, set)) return {success: true};
+        return {success: false, error: "Can't kong"};
+      }
 
       default:
         return { success: false, error: "Invalid action choice" };
@@ -79,9 +94,10 @@ const Actions = {
   },
   revealSet(player, set){
     player.hand.revealedSets.push(set);
-    for (const tile of set){
-      player.hand.removeTile(tile);
+    for (const aTile of set){
+      if (player.hand.removeTile(aTile) === false) return false;
     }
+    return true;
   },
   async discardTile(game, player, tile) {
     if (!player.hand.removeTile(tile)) return {success: false, error: "Discard: Unable to remove tile from hand"};
