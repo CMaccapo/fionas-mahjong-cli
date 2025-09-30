@@ -2,7 +2,7 @@ import Actions from "../src/core/Actions.js";
 import Boneyard from "../src/models/Boneyard.js";
 import Player from "../src/models/Player.js";
 import Tile from "../src/models/Tile.js";
-import { canDrawFromBoneyard, canFormSetWithTile} from "../src/core/RuleCheck.js";
+import { canDrawFromBoneyard, formSetWithTile} from "../src/core/RuleCheck.js";
 
 
 function addTilesToHand(player, tiles) {
@@ -35,8 +35,8 @@ describe("Boneyard grabbing rules", () => {
     expect(game.boneyard.addTile(tile)).toBe(true);
     expect(game.boneyard.tiles.length).toBe(1);
     expect(game.currentPlayer.hand.playableTiles.length).toBe(2);
-    expect(canFormSetWithTile(player, tile)).toBe(true);
-    expect(canDrawFromBoneyard(game.currentPlayer, game.boneyard)).toBe(true)
+    expect(formSetWithTile(player, tile)).not.toBeNull();
+    expect(canDrawFromBoneyard(game.currentPlayer, game.boneyard)).toBe(true);
     
     const result = await Actions.execGrab("2", game);
     expect(result.success).toBe(true);

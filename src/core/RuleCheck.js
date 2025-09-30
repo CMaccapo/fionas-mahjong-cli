@@ -3,7 +3,7 @@ import { isPong, isKong, isSeries } from "./TileRules.js";
 export function canDrawFromBoneyard(player, boneyard) {
   const tile = boneyard.aliveTile;
   if (!tile) return false;
-  return canFormSetWithTile(player, tile);
+  return formSetWithTile(player, tile) !== null;
 }
 
 export function canCallMahjong(player) {
@@ -18,32 +18,35 @@ export function canCallKong(player, tile) {
   return player.hand.hasThreeOf(tile);
 }
 
-export function canFormSetWithTile(player, tile) {
+export function formSetWithTile(player, tile) {
   // Check Mahjong first
   if (player.isWinning(tile)) {
-    return true;
+    return [...player.hand.playableTiles, tile]; // return full winning hand
   }
 
   const testHand = [...player.hand.playableTiles, tile];
 
   // Pong / Kong checks
-  const same = testHand.filter(
-    (t) => t.suit === tile.suit && t.value === tile.value
-  );
-  if (same.length >= 3) return true;
-  if (same.length === 4) return true;
+  const same = testHand.filter(t => t.suit === tile.suit && t.value === tile.value);
+  if (same.length >= 3) {
+    return same.slice(0, 3); // return Pong
+  }
+  if (same.length === 4) {
+    return same; // return Kong
+  }
 
-  // Series check
-  const bySuit = testHand
-    .filter((t) => t.suit === tile.suit)
-    .map((t) => t.value)
-    .sort((a, b) => a - b);
+  const tilesOfSuit = testHand
+    .filter(t => t.suit === tile.suit)
+    .sort((a, b) => a.value - b.value);
 
-  for (let i = 0; i < bySuit.length - 2; i++) {
-    if (bySuit[i] + 1 === bySuit[i + 1] && bySuit[i] + 2 === bySuit[i + 2]) {
-      return true;
+  for (let i = 0; i < tilesOfSuit.length - 2; i++) {
+    const t1 = tilesOfSuit[i];
+    const t2 = tilesOfSuit[i + 1];
+    const t3 = tilesOfSuit[i + 2];
+    if (t1.value + 1 === t2.value && t1.value + 2 === t3.value) {
+      return [t1, t2, t3]; // return series
     }
   }
 
-  return null;
+  return null; // no set found
 }

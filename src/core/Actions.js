@@ -1,4 +1,4 @@
-import { canDrawFromBoneyard, canCallMahjong } from "../core/RuleCheck.js";
+import { canDrawFromBoneyard, canCallMahjong, formSetWithTile } from "../core/RuleCheck.js";
 
 const Actions = {
   async execGrab(choice, game) {
@@ -15,9 +15,10 @@ const Actions = {
       }
 
       case "2": {
-        if (!canDrawFromBoneyard(game.currentPlayer, game.boneyard)) return {success: false, error: "Can't make set with last boneyard tile"};
-        const tile = this.drawFromBoneyard(game, game.currentPlayer);
-        if (!tile) return {success: false, error: "Null tile"};
+        const set = formSetWithTile(game.currentPlayer, game.boneyard.aliveTile);
+        if (!set) return {success: false, error: "Can't make set with last boneyard tile"};
+        this.drawFromBoneyard(game, game.currentPlayer, set);
+
         return { success: true };
       }
 
@@ -68,12 +69,19 @@ const Actions = {
     await game.ui.renderBoard(game);
     return tile;
   },
-  async drawFromBoneyard(game, player) {
+  async drawFromBoneyard(game, player, set) {
     const tile = game.boneyard.draw();
-    player.hand.addTile(tile);
+    
+    this.revealSet(player, set);
 
     await game.ui.renderBoard(game);
     return tile;
+  },
+  revealSet(player, set){
+    player.hand.revealedSets.push(set);
+    for (const tile of set){
+      player.hand.removeTile(tile);
+    }
   },
   async discardTile(game, player, tile) {
     if (!player.hand.removeTile(tile)) return {success: false, error: "Discard: Unable to remove tile from hand"};

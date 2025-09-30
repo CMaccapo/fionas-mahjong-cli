@@ -4,6 +4,7 @@ import { isPong, isKong, isSeries, isPair } from "../core/TileRules.js";
 export default class Hand extends TileCollection {
   constructor() {
     super();
+    this.revealedSets = [];
   }
 
   get playableTiles() {
@@ -49,6 +50,7 @@ export default class Hand extends TileCollection {
 
   toString() {
     return `
+    Revealed: ${this.revealedSets.map(inner => inner.join('')).join('\n')}
     ${this.getBySuit('C').map(t => t.toString()).join("")}
     ${this.getBySuit('●').map(t => t.toString()).join("")}
     ${this.getBySuit('┇').map(t => t.toString()).join("")}
