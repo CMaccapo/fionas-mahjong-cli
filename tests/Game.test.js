@@ -6,27 +6,23 @@ class FakeUI {
     this.inputLog = inputLog;
   }
 
-  _rand() {
+  _rand(label) {
     const val = Math.floor(Math.random() * 12) - 1; // -1 to 10
-    this.inputLog.push(val);
+    this.inputLog.push({ prompt: label, value: val });
     return String(val);
   }
 
   async ask() {
-    return this._rand();
+    return this._rand("ask");
   }
   async askGrab() {
-    return this._rand();
+    return this._rand("askGrab");
   }
   async askFull() {
-    return this._rand();
+    return this._rand("askFull");
   }
-  async waitForTurn() {
-    return;
-  }
-  async renderBoard() {
-    return;
-  }
+  async waitForTurn() {}
+  async renderBoard() {}
   showMessage() {}
   close() {}
 }
@@ -46,23 +42,25 @@ describe("Dynamic Game Test", () => {
     let turns = 0;
     game.handIsOver = () => turns++ > 20;
 
-    // wrap takeTurn so we can assert and log
     const origTakeTurn = game.takeTurn.bind(game);
     game.takeTurn = async () => {
       const result = await origTakeTurn();
       try {
         game.players.forEach((p) => {
-          const len = p.hand.playableTiles.length;
+          const len = p.hand.numTiles;
           if (p === game.currentPlayer) {
             expect(len).toBeGreaterThanOrEqual(16);
             expect(len).toBeLessThanOrEqual(17);
           } else {
-            //console.log(p.name, game.currentPlayer.name, len);
             expect(len).toBe(16);
           }
         });
       } catch (err) {
-        console.error("Test failed after inputs (Last 10):", inputLog.slice(-10));
+        const recent = inputLog.slice(-10);
+        console.error(
+          "Test failed. Last 10 inputs:",
+          recent.map(x => `${x.prompt}: ${x.value}`)
+        );
         throw err;
       }
       return result;
