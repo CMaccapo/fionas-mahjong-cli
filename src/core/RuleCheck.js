@@ -21,7 +21,7 @@ export function canCallKong(player, tile) {
 export function canFormSetWithTile(player, tile) {
   // Check Mahjong first
   if (player.isWinning(tile)) {
-    return "mahjong";
+    return true;
   }
 
   const testHand = [...player.hand.playableTiles, tile];
@@ -30,8 +30,8 @@ export function canFormSetWithTile(player, tile) {
   const same = testHand.filter(
     (t) => t.suit === tile.suit && t.value === tile.value
   );
-  if (same.length >= 3) return "pong";
-  if (same.length === 4) return "kong";
+  if (same.length >= 3) return true;
+  if (same.length === 4) return true;
 
   // Series check
   const bySuit = testHand
@@ -41,7 +41,7 @@ export function canFormSetWithTile(player, tile) {
 
   for (let i = 0; i < bySuit.length - 2; i++) {
     if (bySuit[i] + 1 === bySuit[i + 1] && bySuit[i] + 2 === bySuit[i + 2]) {
-      return "series";
+      return true;
     }
   }
 

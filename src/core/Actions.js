@@ -15,9 +15,9 @@ const Actions = {
       }
 
       case "2": {
-        if (!canDrawFromBoneyard(game.currentPlayer, game.boneyard)) return {success:false, error: "Can't make set with last boneyard tile"};
+        if (!canDrawFromBoneyard(game.currentPlayer, game.boneyard)) return {success: false, error: "Can't make set with last boneyard tile"};
         const tile = this.drawFromBoneyard(game, game.currentPlayer);
-        if (!tile) return {success:false, error: "Null tile"};
+        if (!tile) return {success: false, error: "Null tile"};
         return { success: true };
       }
 
