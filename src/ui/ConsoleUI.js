@@ -18,7 +18,7 @@ export default class ConsoleUI {
     console.clear();
     await game.wall.printSquare(game.wild);
     for (const player of game.players){
-      console.log(player.name, player.hand.playableTiles.length);
+      console.log(player.name, player.hand.numTiles);
     }
 
     // game.players.forEach(p => {

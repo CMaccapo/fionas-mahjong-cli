@@ -134,7 +134,7 @@ export default class Game {
     let handLen = 16;
     if (player.dealer) handLen = 17;
     
-    while (player.hand.playableTiles.length < handLen) {
+    while (player.hand.numTiles < handLen) {
       await this.drawPendingReplacements(player);
     }
   }
@@ -176,13 +176,16 @@ export default class Game {
 
   async takeTurn() {
     this.ui.renderBoard(this);
-    if (this.currentPlayer.hand.playableTiles.length === 16){
+    if (this.currentPlayer.hand.numTiles === 16){
       const choiceGrab = await this.ui.askGrab(this.currentPlayer);
       const resultGrab = await Actions.execGrab(choiceGrab, this);
       if (!resultGrab.success) return resultGrab;
     }
-    const choiceFull = await this.ui.askFull(this.currentPlayer);
-    return await Actions.execFull(choiceFull, this);
+    if (this.currentPlayer.hand.numTiles === 17){
+      const choiceFull = await this.ui.askFull(this.currentPlayer);
+      return await Actions.execFull(choiceFull, this);
+    }
+    return false;
   }
 
   rotatePlayers() {

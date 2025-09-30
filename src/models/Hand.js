@@ -11,6 +11,10 @@ export default class Hand extends TileCollection {
     return this.sortTiles(this.tiles.filter(tile => tile.type === "playable"));
   }
 
+  get numTiles() {
+    return this.playableTiles.length + (this.revealedSets.length *3);
+  }
+
 
   getLongestInSuit() {
     const suits = ["C", "●", "┇"];
