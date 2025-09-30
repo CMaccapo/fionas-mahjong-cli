@@ -6,10 +6,7 @@ const Actions = {
       case "1": {
         let tile = this.drawFromWall(game, game.currentPlayer, "head");
         if (!tile) return {success: false, error: "Can't draw tile- head"};
-        while (tile.type ==="points" && this.phase === "main") {
-          tile = this.drawFromWall(game, game.currentPlayer, "tail");
-          if (!tile) return {success: false, error: "Can't draw tile- tail"};
-        }
+        drawPoints(tile, game);
         
         return { success: true };
       }
@@ -56,8 +53,8 @@ const Actions = {
         const set = setKong(game.currentPlayer, tile);
         if (!set) return {success: false, error: "Can't make set with this tile"};
         
-        if (this.revealSet(game.currentPlayer, set)) return {success: true};
-        return {success: false, error: "Can't kong"};
+        if (!this.revealSet(game.currentPlayer, set)) return {success: false, error: "Can't reveal set"};
+        return drawPoints(tile, game);
       }
 
       default:
@@ -117,6 +114,14 @@ async function chooseIndex(pickFrom, name, ui) {
   const index = parseInt(input, 10);
   if (Number.isNaN(index) || index < 0 || index >= pickFrom.length) return false;
   return index;
+}
+
+function drawPoints(tile, game){
+  while (tile.type ==="points" && game.phase === "main") {
+    tile = this.drawFromWall(game, game.currentPlayer, "tail");
+    if (!tile) return {success: false, error: "Can't draw tile- tail"};
+  }
+  return {success: true};
 }
 
 
