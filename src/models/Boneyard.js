@@ -1,10 +1,20 @@
-export default class Boneyard {
+import TileCollection from "./TileCollection.js";
+
+export default class Boneyard extends TileCollection {
   constructor() {
-    this.tiles = [];
+    super();
+    this.aliveTile = null;
   }
 
   addTile(tile) {
-    this.tiles.push(tile);
+    try {
+      this.tiles.push(tile);
+      this.aliveTile = tile;
+      return true;
+    } catch (error) {
+      console.error('Failed to add tile:', error);
+      return false;
+    }
   }
 
   draw() {
@@ -12,6 +22,6 @@ export default class Boneyard {
   }
 
   isLastTileAlive() {
-    return this.tiles.length > 0;
+    return  this.tiles[this.tiles.length-1] === this.aliveTile;
   }
 }

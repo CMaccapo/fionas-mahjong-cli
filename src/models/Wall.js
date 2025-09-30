@@ -2,11 +2,13 @@ import Tile from "./Tile.js";
 import DecayArray from "./DecayArray.js";
 
 export default class Wall {
-  constructor() {
+  constructor(boneyard) {
+    this.suits = ["C", "●", "┇"];
     this.allTiles = this.buildTiles();
     this.tiles = [...this.allTiles];
     this.shuffle();
     this._break = null;
+    this.boneyard = boneyard;
 
     const stackCount = Math.ceil(this.tiles.length / 2);
     this.printArr = new DecayArray(stackCount, 2);
@@ -25,8 +27,7 @@ export default class Wall {
     const tiles = [];
 
     // --- Playable suits (108) ---
-    const suits = ["●", "┇", "C"];
-    for (const suit of suits) {
+    for (const suit of this.suits) {
       for (let value = 1; value <= 9; value++) {
         for (let i = 0; i < 4; i++) {
           tiles.push(new Tile(suit, value, "playable"));
@@ -68,25 +69,21 @@ export default class Wall {
     }
   }
 
-  async drawFromHead() {
+  drawFromHead() {
     const tile = this.tiles.shift();
     this.printArr.shift();
 
     return tile;
   }
 
-  async drawFromTail() {
+  drawFromTail() {
     const tile = this.tiles.pop();
     this.printArr.pop();
 
     return tile;
   }
 
-  drawWild() {
-    return this.drawFromTail();
-  }
-
-  printSquare() {
+  printSquare(wild) {
     let arr = this.printArr.toArray();
     arr = addHeadTailMarkers(arr);
     const arrLen = arr.length;
@@ -110,7 +107,7 @@ export default class Wall {
                 let firstChar = arr[wrapIndex(arrLen, arrLen-row-start)];
                 let lastChar = arr[wrapIndex(arrLen, sideLen+(row-start))];
 
-                lines[row] = `${firstChar}${" ".repeat(sideLen*symbolLen*2+symbolLen+1)}${lastChar}  `;
+                lines[row] = `${firstChar}${this.getBoneyardStr(lines, row)}${lastChar}  `;
             }
             else {
                 if (col === 1) lines[sideLen] += " ".repeat(symbolLen)
@@ -119,14 +116,37 @@ export default class Wall {
             }
         }
     }
-    lines[0] += "   ";
+    lines[0] += "  ";
     lines[sideLen] += "   ";
+    
     for (let line of lines){
         line = "  "+line;
         line = line.replace(/H   /g, "⚈ ⊃⥽");
         line = line.replace(/   H/g, "⥼⊂ ⚈");
+        if (wild){
+          line = line.replace(/T   /g, wild.toString());
+          line = line.replace(/   T/g, wild.toString());
+        }
         console.log(line);
     }
+  }
+  getBoneyardStr(lines, row) {
+    const start = 2;
+    let mid = " ".repeat(38);
+    if (this.boneyard.tiles.length > 0){
+      if (row >= start){
+        const i = row - start;
+        mid = " ".repeat(6);
+        for (const suit of this.suits){
+          mid += " ".repeat(2);
+          if (this.boneyard.getBySuit(suit)[i]) mid += this.boneyard.getBySuit(suit)[i];
+          else mid += " ".repeat(5);
+          mid += " ".repeat(2);
+        }
+        mid += " ".repeat(5);
+      }
+    }
+    return mid;
   }
 }
 
