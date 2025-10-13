@@ -26,13 +26,8 @@ const Actions = {
   async execFull(choice, game) {
     switch (choice) {
       case "1": {
-        const suitIndex = await chooseIndex(game.currentPlayer.hand.printIndex("suit"), "Suit", game.ui);
-        if (!game.wall.suits[suitIndex]) return { success: false, error: "Invalid Suit Index" };
-        const suit = game.wall.suits[suitIndex];
-
-        const tileIndex = await chooseIndex(game.currentPlayer.hand.printIndex("tile"), "Tile", game.ui);
-        if (!game.currentPlayer.hand.getBySuit(suit)[tileIndex]) return { success: false, error: "Invalid Tile Index" };
-        const tile = game.currentPlayer.hand.getBySuit(suit)[tileIndex];
+        const tile = await chooseTile(game);
+        if (!tile) return {success: false, error: "Invalid tile"};
         
         return await this.discardTile(game, game.currentPlayer, tile);
       }
@@ -42,13 +37,8 @@ const Actions = {
         return { success: true };
       }
       case "3": {
-        const suitIndex = await chooseIndex(game.currentPlayer.hand.printIndex("suit"), "Suit", game.ui);
-        if (!game.wall.suits[suitIndex]) return { success: false, error: "Invalid Suit Index" };
-        const suit = game.wall.suits[suitIndex];
-
-        const tileIndex = await chooseIndex(game.currentPlayer.hand.printIndex("tile"), "Tile", game.ui);
-        if (!game.currentPlayer.hand.getBySuit(suit)[tileIndex]) return { success: false, error: "Invalid Tile Index" };
-        const tile = game.currentPlayer.hand.getBySuit(suit)[tileIndex];
+        const tile = await chooseTile(game);
+        if (!tile) return {success: false, error: "Invalid tile"};
         
         const set = setKong(game.currentPlayer, tile);
         if (!set) return {success: false, error: "Can't make set with this tile"};
@@ -109,6 +99,18 @@ const Actions = {
     // Implementation will interact with TileRules + RuleCheck
   }
 };
+
+async function chooseTile(game){
+  const suitIndex = await chooseIndex(game.currentPlayer.hand.printIndex("suit"), "Suit", game.ui);
+  if (!game.wall.suits[suitIndex]) return { success: false, error: "Invalid Suit Index" };
+  const suit = game.wall.suits[suitIndex];
+
+  const tileIndex = await chooseIndex(game.currentPlayer.hand.printIndex("tile"), "Tile", game.ui);
+  if (!game.currentPlayer.hand.getBySuit(suit)[tileIndex]) return { success: false, error: "Invalid Tile Index" };
+  const tile = game.currentPlayer.hand.getBySuit(suit)[tileIndex];
+
+  return tile;
+}
 
 async function chooseIndex(pickFrom, name, ui) {
   const input = await ui.ask(`\n${name}: ${pickFrom}\nChoose index from ${name}: `);
