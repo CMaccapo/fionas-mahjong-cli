@@ -26,7 +26,7 @@ const Actions = {
 
         } while (!["y", "n"].includes(isDone));
         
-        if (isDone === "N") {
+        if (isDone === "n") {
           tile = await chooseTile(game);
           if (!tile) return {success: false, error: "Invalid tile"};
           set.push(tile);
