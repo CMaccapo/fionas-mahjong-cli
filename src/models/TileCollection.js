@@ -23,11 +23,10 @@ export default class TileCollection {
   }
 
   removeTile(tile) {
-    const idx = this.tiles.indexOf(tile);
-    if (idx >= 0) {
-      this.tiles.splice(idx, 1);
-      return true;
-    }
-    return false;
+    if (this.tiles.length === 0 ) return false;
+    const index = this.tiles.findIndex(t => t.equals(tile));
+    if (index === -1) return false;
+    this.tiles.splice(index, 1);
+    return true;
   }
 }

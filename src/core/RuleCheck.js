@@ -11,7 +11,7 @@ export function canCallMahjong(player) {
 }
 
 export function setKong(player, tile) {
-  const result = player.hand.tiles.filter( aTile => aTile.suit === tile.suit && aTile.value === tile.value);
+  const result = player.hand.tiles.filter( aTile => aTile.equals(tile));
   if (result.length !== 4) return null;
   return result;
 }

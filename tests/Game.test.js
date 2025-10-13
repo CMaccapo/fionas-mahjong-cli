@@ -57,6 +57,7 @@ describe("Dynamic Game Test", () => {
         });
       } catch (err) {
         const recent = inputLog.slice(-10);
+        console.error("aaaaaaaa",game.currentPlayer.hand.playableTiles.length, game.currentPlayer.hand.playableTiles, game.currentPlayer.hand.revealedSets);
         console.error(
           "Test failed. Last 10 inputs:",
           recent.map(x => `${x.prompt}: ${x.value}`)

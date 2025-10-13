@@ -221,7 +221,7 @@ beforeEach(() => {
   };
 
   player = new Player("Alice", "N");
-  tile = { suit: "C", value: 5, type: "playable", toString: () => "C5" };
+  tile = new Tile ("C", 5);
   player.hand.addTile(tile);
 
   game.currentPlayer = player;

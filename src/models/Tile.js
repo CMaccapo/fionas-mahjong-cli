@@ -18,4 +18,8 @@ export default class Tile {
     }
     return `|${this.suit}:${this.value}|`;
   }
+  
+  equals(other) {
+    return other && this.suit === other.suit && this.value === other.value;
+  }
 }
