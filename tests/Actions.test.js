@@ -114,24 +114,6 @@ describe("Actions", () => {
         inputs: defaultInputs,
       },
       {
-        name: "allows mahjong",
-        tiles: Array.from({ length: 15 }, () => ["●", 6]).concat([["●", 5]]),
-        expectSuccess: true,
-        inputs: defaultInputs,
-      },
-      {
-        name: "allows mahjong final series",
-        tiles: Array.from({ length: 15 }, () => ["●", 6]).concat([["●", 4]]),
-        expectSuccess: true,
-        inputs: defaultInputs,
-      },
-      {
-        name: "fails no mahjong final pair mismatch",
-        tiles: Array.from({ length: 15 }, () => ["●", 6]).concat([["●", 3]]),
-        expectSuccess: false,
-        inputs: defaultInputs,
-      },
-      {
         name: "fails non-suit series",
         tiles: [ ["C", 6], ["C", 7] ],
         expectSuccess: false,

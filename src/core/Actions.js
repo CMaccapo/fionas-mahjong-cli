@@ -23,7 +23,6 @@ const Actions = {
         
         do {
           isDone = (await game.ui.ask("Done Choosing? (Y|N)")).toLowerCase();
-
         } while (!["y", "n"].includes(isDone));
         
         if (isDone === "n") {
@@ -34,7 +33,6 @@ const Actions = {
 
         set.push(game.boneyard.aliveTile);
         if (!isASet(set)) return {success: false, error: "Can't make set with last boneyard tile"};
-        console.error(set);
 
         this.drawFromBoneyard(game, game.currentPlayer, set);
 
