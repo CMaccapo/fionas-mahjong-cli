@@ -3,7 +3,7 @@ import { isPong, isKong, isSeries } from "./TileRules.js";
 export function canDrawFromBoneyard(player, boneyard) {
   const tile = boneyard.aliveTile;
   if (!tile) return false;
-  return formSetWithTile(player, tile) !== null;
+  return canFormSetWithTile(player, tile) !== null;
 }
 
 export function canCallMahjong(player) {
@@ -15,7 +15,13 @@ export function setKong(player, tile) {
   if (result.length !== 4) return null;
   return result;
 }
-
+export function isASet(set) {
+  //ADD isMahjong
+  if (isKong) return true;
+  if (isPong) return true;
+  if (isSeries) return true;
+  return false;
+}
 export function formSetWithTile(player, tile) {
   // Check Mahjong first
   if (player.isWinning(tile)) {

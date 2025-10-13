@@ -1,4 +1,4 @@
-import { canDrawFromBoneyard, canCallMahjong, formSetWithTile, setKong } from "../core/RuleCheck.js";
+import { canDrawFromBoneyard, canCallMahjong, isASet, setKong } from "../core/RuleCheck.js";
 
 const Actions = {
   async execGrab(choice, game) {
@@ -12,8 +12,30 @@ const Actions = {
       }
 
       case "2": {
-        const set = formSetWithTile(game.currentPlayer, game.boneyard.aliveTile);
-        if (!set) return {success: false, error: "Can't make set with last boneyard tile"};
+        let tile, isDone;
+        let set = [];
+        for (let i = 0; i < 2; i++) {
+          tile = await chooseTile(game);
+
+          if (!tile) return {success: false, error: "Invalid tile"};
+          set.push(tile);
+        }
+        
+        do {
+          isDone = (await game.ui.ask("Done Choosing? (Y|N)")).toLowerCase();
+
+        } while (!["y", "n"].includes(isDone));
+        
+        if (isDone === "N") {
+          tile = await chooseTile(game);
+          if (!tile) return {success: false, error: "Invalid tile"};
+          set.push(tile);
+        }
+
+        set.push(game.boneyard.aliveTile);
+        if (!isASet(set)) return {success: false, error: "Can't make set with last boneyard tile"};
+        console.error(set);
+
         this.drawFromBoneyard(game, game.currentPlayer, set);
 
         return { success: true };
@@ -102,11 +124,12 @@ const Actions = {
 
 async function chooseTile(game){
   const suitIndex = await chooseIndex(game.currentPlayer.hand.printIndex("suit"), "Suit", game.ui);
-  if (!game.wall.suits[suitIndex]) return { success: false, error: "Invalid Suit Index" };
+  if (!game.wall.suits[suitIndex]) return false;
   const suit = game.wall.suits[suitIndex];
 
   const tileIndex = await chooseIndex(game.currentPlayer.hand.printIndex("tile"), "Tile", game.ui);
-  if (!game.currentPlayer.hand.getBySuit(suit)[tileIndex]) return { success: false, error: "Invalid Tile Index" };
+
+  if (!game.currentPlayer.hand.getBySuit(suit)[tileIndex]) return false;
   const tile = game.currentPlayer.hand.getBySuit(suit)[tileIndex];
 
   return tile;

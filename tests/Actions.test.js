@@ -79,67 +79,84 @@ describe("Actions", () => {
     });
   });
   describe("Boneyard grabbing rules", () => {
+    const defaultInputs = ["1", "0", "1", "1", "Y"];
+    const charDefaultInputs = ["0", "0", "0", "1", "Y"];
+    const kongInputs = ["1", "0", "1", "1", "N", "1", "2"]; 
     const cases = [
       {
         name: "allows pong",
         tiles: [ ["●", 5], ["●", 5] ],
         expectSuccess: true,
+        inputs: defaultInputs,
       },
       {
         name: "allows kong",
         tiles: [ ["●", 5], ["●", 5], ["●", 5] ],
         expectSuccess: true,
+        inputs: kongInputs,
       },
       {
         name: "allows series 4.6",
         tiles: [ ["●", 4], ["●", 6] ],
         expectSuccess: true,
+        inputs: defaultInputs,
       },
       {
         name: "allows series 34.",
         tiles: [ ["●", 3], ["●", 4] ],
         expectSuccess: true,
+        inputs: defaultInputs,
       },
       {
         name: "allows series .67",
         tiles: [ ["●", 6], ["●", 7] ],
         expectSuccess: true,
+        inputs: defaultInputs,
       },
       {
         name: "allows mahjong",
         tiles: Array.from({ length: 15 }, () => ["●", 6]).concat([["●", 5]]),
         expectSuccess: true,
+        inputs: defaultInputs,
       },
       {
         name: "allows mahjong final series",
         tiles: Array.from({ length: 15 }, () => ["●", 6]).concat([["●", 4]]),
         expectSuccess: true,
+        inputs: defaultInputs,
       },
       {
         name: "fails no mahjong final pair mismatch",
         tiles: Array.from({ length: 15 }, () => ["●", 6]).concat([["●", 3]]),
         expectSuccess: false,
+        inputs: defaultInputs,
       },
       {
         name: "fails non-suit series",
         tiles: [ ["C", 6], ["C", 7] ],
         expectSuccess: false,
+        inputs: defaultInputs,
       },
       {
         name: "fails non-suit pong",
         tiles: [ ["C", 5], ["C", 5] ],
         expectSuccess: false,
+        inputs: defaultInputs,
       },
       {
         name: "fails pair",
         tiles: [ ["C", 5] ],
         expectSuccess: false,
+        inputs: defaultInputs,
       },
     ];
 
-    test.each(cases)("$name", async ({ tiles, expectSuccess, extraCheck }) => {
+    test.each(cases)("$name", async ({ tiles, expectSuccess, extraCheck, inputs }) => {
       addTilesToHand(player, tiles.map(([s, n]) => new Tile(s, n)));
       expect(game.boneyard.addTile(tile)).toBe(true);
+
+      let inputQueue = [...inputs];
+      game.ui.ask = async () => inputQueue.shift() || "Y";
 
       const result = await Actions.execGrab("2", game);
       expect(result.success).toBe(expectSuccess);
