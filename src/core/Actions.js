@@ -83,6 +83,7 @@ const Actions = {
   },
   async drawFromBoneyard(game, player, set) {
     const tile = game.boneyard.draw();
+    player.hand.addTile(tile);
     
     this.revealSet(player, set);
 
@@ -92,7 +93,7 @@ const Actions = {
   revealSet(player, set){
     player.hand.revealedSets.push(set);
     for (const aTile of set){
-      if (player.hand.removeTile(aTile) === false) return false;
+      if (player.hand.removeTile(aTile) == false) return false; 
     }
     return true;
   },

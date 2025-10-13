@@ -24,9 +24,11 @@ export default class TileCollection {
 
   removeTile(tile) {
     if (this.tiles.length === 0 ) return false;
+
     const index = this.tiles.findIndex(t => t.equals(tile));
     if (index === -1) return false;
     this.tiles.splice(index, 1);
+    
     return true;
   }
 }

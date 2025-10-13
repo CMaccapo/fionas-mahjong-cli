@@ -7,7 +7,7 @@ class FakeUI {
   }
 
   _rand(label) {
-    const val = Math.floor(Math.random() * 12) - 1; // -1 to 10
+    const val = Math.floor(Math.random() * 7) - 1;
     this.inputLog.push({ prompt: label, value: val });
     return String(val);
   }

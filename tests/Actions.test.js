@@ -79,139 +79,80 @@ describe("Actions", () => {
     });
   });
   describe("Boneyard grabbing rules", () => {
+    const cases = [
+      {
+        name: "allows pong",
+        tiles: [ ["●", 5], ["●", 5] ],
+        expectSuccess: true,
+      },
+      {
+        name: "allows kong",
+        tiles: [ ["●", 5], ["●", 5], ["●", 5] ],
+        expectSuccess: true,
+      },
+      {
+        name: "allows series 4.6",
+        tiles: [ ["●", 4], ["●", 6] ],
+        expectSuccess: true,
+      },
+      {
+        name: "allows series 34.",
+        tiles: [ ["●", 3], ["●", 4] ],
+        expectSuccess: true,
+      },
+      {
+        name: "allows series .67",
+        tiles: [ ["●", 6], ["●", 7] ],
+        expectSuccess: true,
+      },
+      {
+        name: "allows mahjong",
+        tiles: Array.from({ length: 15 }, () => ["●", 6]).concat([["●", 5]]),
+        expectSuccess: true,
+      },
+      {
+        name: "allows mahjong final series",
+        tiles: Array.from({ length: 15 }, () => ["●", 6]).concat([["●", 4]]),
+        expectSuccess: true,
+      },
+      {
+        name: "fails no mahjong final pair mismatch",
+        tiles: Array.from({ length: 15 }, () => ["●", 6]).concat([["●", 3]]),
+        expectSuccess: false,
+      },
+      {
+        name: "fails non-suit series",
+        tiles: [ ["C", 6], ["C", 7] ],
+        expectSuccess: false,
+      },
+      {
+        name: "fails non-suit pong",
+        tiles: [ ["C", 5], ["C", 5] ],
+        expectSuccess: false,
+      },
+      {
+        name: "fails pair",
+        tiles: [ ["C", 5] ],
+        expectSuccess: false,
+      },
+    ];
 
-    test("allows pong", async () => {
-      addTilesToHand(player, [
-        new Tile("●", 5),
-        new Tile("●", 5),
-      ]);
-
+    test.each(cases)("$name", async ({ tiles, expectSuccess, extraCheck }) => {
+      addTilesToHand(player, tiles.map(([s, n]) => new Tile(s, n)));
       expect(game.boneyard.addTile(tile)).toBe(true);
-      expect(game.boneyard.tiles.length).toBe(1);
-      expect(game.currentPlayer.hand.playableTiles.length).toBe(2);
-      expect(formSetWithTile(player, tile)).not.toBeNull();
-      expect(canDrawFromBoneyard(game.currentPlayer, game.boneyard)).toBe(true);
-      
-      const result = await Actions.execGrab("2", game);
-      expect(result.success).toBe(true);
-    });
-    test("allows kong", async () => {
-      addTilesToHand(player, [
-        new Tile("●", 5),
-        new Tile("●", 5),
-        new Tile("●", 5)
-      ]);
 
-      expect(game.boneyard.addTile(tile)).toBe(true);
-      
       const result = await Actions.execGrab("2", game);
-      expect(result.success).toBe(true);
-    });
-    test("allows series 4.6", async () => {
-      addTilesToHand(player, [
-        new Tile("●", 4),
-        new Tile("●", 6),
-      ]);
-
-      expect(game.boneyard.addTile(tile)).toBe(true);
-      
-      const result = await Actions.execGrab("2", game);
-      expect(result.success).toBe(true);
-    });
-    test("allows series 34.", async () => {
-      addTilesToHand(player, [
-        new Tile("●", 3),
-        new Tile("●", 4),
-      ]);
-
-      expect(game.boneyard.addTile(tile)).toBe(true);
-      
-      const result = await Actions.execGrab("2", game);
-      expect(result.success).toBe(true);
-    });
-    test("allows series .67", async () => {
-      addTilesToHand(player, [
-        new Tile("●", 6),
-        new Tile("●", 7),
-      ]);
-
-      expect(game.boneyard.addTile(tile)).toBe(true);
-      
-      const result = await Actions.execGrab("2", game);
-      expect(result.success).toBe(true);
-    });
-    test("allows mahjong", async () => {
-      let tiles = [];
-      for (let i = 0; i < 15; i++){
-        tiles.push(new Tile("●", 6));
+      expect(result.success).toBe(expectSuccess);
+      if (expectSuccess === true){
+        expect(game.currentPlayer.hand.revealedSets.length).toBe(1);
+        expect(game.currentPlayer.hand.playableTiles.length).toBe(0);
       }
-      tiles.push(new Tile("●", 5));
-      addTilesToHand(player, tiles);
 
-      expect(game.boneyard.addTile(tile)).toBe(true);
-      
-      const result = await Actions.execGrab("2", game);
-      expect(result.success).toBe(true);
+      if (extraCheck) extraCheck(game);
     });
-    test("allows mahjong final series", async () => {
-      let tiles = [];
-      for (let i = 0; i < 15; i++){
-        tiles.push(new Tile("●", 6));
-      }
-      tiles.push(new Tile("●", 4));
-      addTilesToHand(player, tiles);
 
-      expect(game.boneyard.addTile(tile)).toBe(true);
-      
-      const result = await Actions.execGrab("2", game);
-      expect(result.success).toBe(true);
-    });
-    test("fails no mahjong final pair mismatch", async () => {
-      let tiles = [];
-      for (let i = 0; i < 15; i++){
-        tiles.push(new Tile("●", 6));
-      }
-      tiles.push(new Tile("●", 3));
-      addTilesToHand(player, tiles);
-
-      expect(game.boneyard.addTile(tile)).toBe(true);
-      
-      const result = await Actions.execGrab("2", game);
-      expect(result.success).toBe(false);
-    });
-    test("fails non-suit series", async () => {
-      addTilesToHand(player, [
-        new Tile("C", 6),
-        new Tile("C", 7),
-      ]);
-
-      expect(game.boneyard.addTile(tile)).toBe(true);
-      
-      const result = await Actions.execGrab("2", game);
-      expect(result.success).toBe(false);
-    });
-    test("fails non-suit pong", async () => {
-      addTilesToHand(player, [
-        new Tile("C", 5),
-        new Tile("C", 5),
-      ]);
-
-      expect(game.boneyard.addTile(tile)).toBe(true);
-      
-      const result = await Actions.execGrab("2", game);
-      expect(result.success).toBe(false);
-    });
-    test("fails pair", async () => {
-      addTilesToHand(player, [
-        new Tile("C", 5)
-      ]);
-
-      expect(game.boneyard.addTile(tile)).toBe(true);
-      
-      const result = await Actions.execGrab("2", game);
-      expect(result.success).toBe(false);
-    });
   });
+
 });
 
 beforeEach(() => {

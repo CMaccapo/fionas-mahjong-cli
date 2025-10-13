@@ -12,7 +12,6 @@ export default class Boneyard extends TileCollection {
       this.aliveTile = tile;
       return true;
     } catch (error) {
-      console.error('Failed to add tile:', error);
       return false;
     }
   }
